@@ -1,21 +1,18 @@
 import traceback
-@app.errorhandler(500)
-def internal_error(error):
-    return f"<pre>{traceback.format_exc()}</pre>", 500
-
-from flask import Flask, render_template, request, jsonify, session, redirect
+import os
+from flask import Flask, render_template, request, jsonify, session, redirect, send_from_directory
 from markupsafe import Markup
 import tmdb
 import sections as s
 import requests
 import config
 
-app = Flask(__name__)
-app.secret_key = 'dakhlin_secret_key_123'
+template_dir = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, template_folder=os.path.join(template_dir, 'templates'), static_folder='static')
+app.secret_key = os.environ.get('SECRET_KEY', 'dakhlin_secret_key_123')
 
 BASE_URL = "https://api.themoviedb.org/3"
-import os
-    API_KEY = os.environ.get('TMDB_API_KEY')
+API_KEY = os.environ.get('TMDB_API_KEY')
 
 @app.route("/")
 def index():
@@ -326,5 +323,4 @@ def watch_redirect(media_type, id):
 def static_files():
     return send_from_directory(os.getcwd(), request.path[1:])
 
-app = Flask(__name__, template_folder='templates', static_folder='static')
-app.secret_key = os.environ.get('SECRET_KEY', 'dakhlin_secret_key_123')
+
