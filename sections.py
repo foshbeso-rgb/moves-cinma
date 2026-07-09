@@ -337,8 +337,6 @@ def get_cards(items, media_type, title, scroll=True):
     </div>
     """)
 
-from markupsafe import Markup
-
 def get_player(servers_html):
     return Markup(f'''
     <div class="section">
@@ -346,67 +344,43 @@ def get_player(servers_html):
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
             {servers_html}
         </div>
-        <div class="player" id="player-container">
-            <button onclick="toggleFullscreen()" style="position:absolute; top:10px; right:10px; z-index:100; padding:8px 12px; background:#E50914; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">⛶ تكبير</button>
-            <iframe id="player-frame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media" style="width:100%; height:80vh; border-radius:8px; background:#000;"></iframe>
+        <div class="player">
+            <iframe id="player-frame" src="" frameborder="0" allowfullscreen style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
         </div>
     </div>
     <script>
     function loadServer(url, btn){{
         document.getElementById('player-frame').src = url;
         document.querySelectorAll('.server-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
+        btn.parentElement.classList.add('active');
+        btn.style.background = '#E50914';
     }}
-
-    function toggleFullscreen() {{
-        let elem = document.getElementById("player-container");
-        if (!document.fullscreenElement) {{
-            elem.requestFullscreen();
-        }} else {{
-            document.exitFullscreen();
-        }}
-    }}
-
     window.onload = () => {{
-        let firstBtn = document.querySelector('.server-btn');
+        let firstBtn = document.querySelector('.server-btn button');
         if(firstBtn) firstBtn.click();
     }}
     </script>
     <style>
-    .server-btn {{
-        padding:10px 15px; background:#222; color:#fff; border:none; 
-        border-radius:6px; cursor:pointer; font-weight:bold;
-    }}
-    .server-btn.active {{ background:#E50914 !important; }}
-    .server-btn:hover {{ background:#333; }}
-    .player{{position:relative;}}
-    #player-frame {{height:80vh;}}
+    .server-btn.active button{{ background:#E50914 !important; }}
     </style>
     ''')
-    def get_servers(id, media_type, season=1, episode=1):
+
+def get_servers_html(servers):
+    return ''.join([f'<button class="btn" onclick="window.location.href=\'{s}\'">{name}</button>' for name, s in servers])
+
+def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
         return [
-            ('▶️ سيرفر 1 - Vidsrc.su AR', f'https://vidsrc.su/embed/movie/{id}/ar'),
+            ('▶️ سيرفر 1 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/movie/{id}/ar'), # خليه الاول
             ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 3 - VidSrc.to', f'https://vidsrc.to/embed/movie/{id}'),
-            ('▶️ سيرفر 4 - Smiles', f'https://www.2embed.cc/embed/movie/{id}'),
-            ('▶️ سيرفر 5 - VidLink', f'https://vidlink.pro/movie/{id}'),
+            ('▶️ سيرفر 3 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
         ]
     else:
         return [
-            ('▶️ سيرفر 1 - Vidsrc.su AR', f'https://vidsrc.su/embed/tv/{id}/{season}/{episode}/ar'),
+            ('▶️ سيرفر 1 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/tv/{id}/{season}/{episode}/ar'), # خليه الاول
             ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 3 - VidSrc.to', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
-            ('▶️ سيرفر 4 - Smiles', f'https://www.2embed.cc/embed/tv/{id}&s={season}&e={episode}'),
-            ('▶️ سيرفر 5 - VidLink', f'https://vidlink.pro/tv/{id}/{season}/{episode}'),
+            ('▶️ سيرفر 3 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
         ]
-
-def get_servers_html(servers, id, media_type, season=1, episode=1):
-    html = ''
-    for name, url in servers:
-        html += f'<button class="server-btn" onclick="loadServer(\'{url}\', this)">{name}</button>'
-    return html
-        
 def get_cast(cast):
     if not cast: return Markup('')
     actors = ''.join([f'<a href="/search?q={c["name"]}" class="cast-card"><img src="{tmdb.IMG_BASE}w185{c["profile_path"]}"><h3>{c["name"]}</h3></a>' for c in cast[:15] if c.get('profile_path')])
