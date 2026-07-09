@@ -6,7 +6,6 @@ IMG_BASE = "https://image.tmdb.org/t/p/"
 
 def _make_request(endpoint, params={}):
     params['api_key'] = API_KEY
-    params['language'] = params.get('language', 'ar-EG') # خليتها ديناميك
     try:
         r = requests.get(f"{BASE_URL}/{endpoint}", params=params, timeout=10)
         r.raise_for_status()
@@ -42,7 +41,7 @@ def search(query, page=1):
     return data.get('results', []), data.get('total_pages', 1)
 
 def discover_movies(language='en', genre=None, page=1, sort_by='popularity.desc', with_original_language=None, with_origin_country=None):
-    params = {'sort_by': sort_by, 'page': page, 'vote_count.gte': 100} # زودت التصويت عشان النتايج تبقى نضيفة
+    params = {'sort_by': sort_by, 'page': page, 'vote_count.gte': 100, 'language': 'ar-EG'} # زودت التصويت عشان النتايج تبقى نضيفة
     if language: params['with_original_language'] = language
     if genre: params['with_genres'] = genre
     if with_original_language: params['with_original_language'] = with_original_language # للعربي
@@ -51,10 +50,16 @@ def discover_movies(language='en', genre=None, page=1, sort_by='popularity.desc'
     data = _make_request('discover/movie', params)
     return data.get('results', []), data.get('total_pages', 1)
 
-def discover_shows(language='en', genre=None, page=1, with_origin_country=None):
-    params = {'sort_by': 'popularity.desc', 'page': page, 'vote_count.gte': 20}
-    if language: params['with_original_language'] = language
-    if genre: params['with_genres'] = genre
+def discover_shows(language='en', genre=None, page=1):
+    params = {'sort_by': 'popularity.desc', 'page': page, 'vote_count.gte': 20, 'language': 'ar-EG'}
+    
+    # دي لغة العمل الاصلي: ko للكوري, en للاجنبي
+    if language: 
+        params['with_original_language'] = language
+    
+    if genre: 
+        params['with_genres'] = genre
+        
     data = _make_request('discover/tv', params)
     return data.get('results', []), data.get('total_pages', 1)
 
@@ -71,8 +76,8 @@ def get_similar(id, media_type):
     return data.get("results", [])
 
 def get_upcoming(page=1):
-    data = _make_request('movie/upcoming', {'page': page, 'region': 'EG'}) # ضفت المنطقة
+    data = _make_request('movie/upcoming', {'page': page, 'region': 'EG', 'language': 'ar-EG'}) # ضفت المنطقة
     return data.get('results', []), data.get('total_pages', 1)
 
 def get_details(id, media_type):
-    return _make_request(f'{media_type}/{id}', {'append_to_response': 'credits'})
+    return _make_request(f'{media_type}/{id}', {'append_to_response': 'credits', 'language': 'ar-EG'})
