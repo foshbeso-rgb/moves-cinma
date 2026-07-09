@@ -33,18 +33,16 @@
         <a href="https://t.me/" target="_blank" style="margin: 0 10px; font-size: 22px; color: #ccc; transition: 0.3s;"><i class="fab fa-telegram"></i></a>
         <a href="https://facebook.com/" target="_blank" style="margin: 0 10px; font-size: 22px; color: #ccc; transition: 0.3s;"><i class="fab fa-facebook-f"></i></a>
         <a href="https://twitter.com/" target="_blank" style="margin: 0 10px; font-size: 22px; color: #ccc; transition: 0.3s;"><i class="fab fa-twitter"></i></a>
-        <a href="{{ url_for('index') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">الرئيسية</a>
-        <a href="{{ url_for('favorites_page') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">المفضلة</a>
-        <a href="{{ url_for('about') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">من نحن</a>
-        
-        <span style="color: #555;">|</span>
-        <a href="/year/2026" style="color: #e50914; text-decoration: none; margin: 0 15px; font-weight: bold;">أفلام 2026</a>
-        <a href="/year/2025" style="color: #e50914; text-decoration: none; margin: 0 15px; font-weight: bold;">أفلام 2025</a>
     </div>
 
     <div class="copyright" style="font-size: 14px; margin-top: 20px;">
         <p>© 2026 داخلين سينما. جميع الحقوق محفوظة.</p>
         <p>تم التطوير بواسطة: <b style="color: white;">Fouad Abbas</b></p>
+        
+        <!-- ده العداد ضفتهولك هنا -->
+        <p style="color:#e50914; margin-top:10px; font-weight:bold;">
+            👀 عدد الزوار: {{ visitors }}
+        </p>
     </div>
 </footer>
 
@@ -57,3 +55,11 @@
     </div>
   {% endfor %}
 </div>
+
+<!-- الترحيب الصوتي حطيته هنا في الاخر -->
+<audio id="welcome" autoplay>
+  <source src="https://www.soundjay.com/human/sounds/welcome-1.mp3" type="audio/mpeg">
+</audio>
+
+</body>
+</html>
