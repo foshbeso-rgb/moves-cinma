@@ -383,7 +383,6 @@ def get_player(servers_html):
     #player-frame {{height:80vh;}}
     </style>
     ''')
-
     def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
         return [
