@@ -347,7 +347,7 @@ def get_player(servers_html):
             {servers_html}
         </div>
         <div class="player">
-            <iframe id="player-frame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen" style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
+            <iframe id="player-frame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
         </div>
     </div>
     <script>
