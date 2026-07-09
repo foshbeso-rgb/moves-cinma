@@ -348,7 +348,7 @@ def get_player(servers_html):
         </div>
         <div class="player" id="player-container">
             <button onclick="toggleFullscreen()" style="position:absolute; top:10px; right:10px; z-index:100; padding:8px 12px; background:#E50914; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">⛶ تكبير</button>
-            <iframe id="player-frame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media" style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
+            <iframe id="player-frame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media" style="width:100%; height:80vh; border-radius:8px; background:#000;"></iframe>
         </div>
     </div>
     <script>
@@ -373,20 +373,15 @@ def get_player(servers_html):
     }}
     </script>
     <style>
-.server-btn {
-    padding:10px 15px; background:#222; color:#fff; border:none; 
-    border-radius:6px; cursor:pointer; font-weight:bold;
-}
-.server-btn.active { background:#E50914 !important; }
-.server-btn:hover { background:#333; }
-.player{position:relative;}
-
-/* ده الجديد عشان الفيديو يملا الشاشة */
-#player-frame {
-    width: 100%;
-    height: 80vh; /* خلي الارتفاع 80% من الشاشة */
-}
-</style>
+    .server-btn {{
+        padding:10px 15px; background:#222; color:#fff; border:none; 
+        border-radius:6px; cursor:pointer; font-weight:bold;
+    }}
+    .server-btn.active {{ background:#E50914 !important; }}
+    .server-btn:hover {{ background:#333; }}
+    .player{{position:relative;}}
+    #player-frame {{height:80vh;}}
+    </style>
     ''')
     
 def get_servers(id, media_type, season=1, episode=1):
