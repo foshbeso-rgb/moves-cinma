@@ -390,6 +390,13 @@ def get_servers(id, media_type, season=1, episode=1):
             ('▶️ سيرفر 5 - Smashy', f'https://smashy.stream/embed/tv/{id}/{season}/{episode}'),    # جديد 2
             ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/tv/{id}')
         ]
+
+
+def get_servers_html(servers, id, media_type, season=1, episode=1):
+    html = ''
+    for name, url in servers:
+        html += f'<button class="server-btn" onclick="loadServer(\'{url}\', this)">{name}</button>'
+    return html
         
 def get_cast(cast):
     if not cast: return Markup('')
