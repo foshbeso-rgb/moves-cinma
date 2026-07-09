@@ -336,7 +336,6 @@ def get_cards(items, media_type, title, scroll=True):
         </div>
     </div>
     """)
-
 def get_player(servers_html):
     return Markup(f'''
     <div class="section">
@@ -344,24 +343,40 @@ def get_player(servers_html):
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
             {servers_html}
         </div>
-        <div class="player">
-            <iframe id="player-frame" src="" frameborder="0" allowfullscreen style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
+        <div class="player" id="player-container">
+            <button onclick="toggleFullscreen()" style="position:absolute; top:10px; right:10px; z-index:100; padding:8px 12px; background:#E50914; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">⛶ تكبير</button>
+            <iframe id="player-frame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media" style="width:100%; height:80vh; border-radius:8px; background:#000;"></iframe>
         </div>
     </div>
     <script>
     function loadServer(url, btn){{
         document.getElementById('player-frame').src = url;
         document.querySelectorAll('.server-btn').forEach(b=>b.classList.remove('active'));
-        btn.parentElement.classList.add('active');
-        btn.style.background = '#E50914';
+        btn.classList.add('active');
     }}
+
+    function toggleFullscreen() {{
+        let elem = document.getElementById("player-container");
+        if (!document.fullscreenElement) {{
+            elem.requestFullscreen();
+        }} else {{
+            document.exitFullscreen();
+        }}
+    }}
+
     window.onload = () => {{
-        let firstBtn = document.querySelector('.server-btn button');
+        let firstBtn = document.querySelector('.server-btn');
         if(firstBtn) firstBtn.click();
     }}
     </script>
     <style>
-    .server-btn.active button{{ background:#E50914 !important; }}
+    .server-btn {{
+        padding:10px 15px; background:#222; color:#fff; border:none; 
+        border-radius:6px; cursor:pointer; font-weight:bold; transition:0.3s;
+    }}
+    .server-btn.active {{ background:#E50914 !important; }}
+    .server-btn:hover {{ background:#333; }}
+    .player{{position:relative;}}
     </style>
     ''')
 
