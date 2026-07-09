@@ -139,14 +139,14 @@ def home_page():
     
     results = []
     for movie_id in featured_ids:
-        movie = tmdb.get_movie_details(movie_id)
-        if movie:
+        movie = tmdb.get_movie_details(movie_id) # موجودة عندك اهي
+        if movie and movie.get('title'): # نتأكد انه فيلم
             results.append(movie)
     
     content = s.get_cards(results, 'movie', '🔥 افلام اليوم', scroll=False)
-    trending_link = '<div style="text-align:center; margin:20px;"><a href="/trending" class="btn">عرض المزيد</a></div>'
+    trending_link = '<div style="text-align:center; margin:20px;"><a href="/trending" class="btn">عرض المزيد 🔥</a></div>'
     
-    return s.base(content + trending_link, "داخلين سينما")
+    return s.base(content + trending_link, "داخلين سينما - مشاهدة افلام ومسلسلات")
 
 
 
