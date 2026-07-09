@@ -315,8 +315,8 @@ def get_cards(items, media_type, title, scroll=True):
     cards_html = "".join([get_card(item) for item in items])
     
     more_link = "#"
-    if title == "⭐ الاعلى تقييماً": 
-        more_link = "/genre/0?sort=vote_average.desc"
+if title == "⭐ الاعلى تقييماً": 
+    more_link = "/top_rated"  # بدل /genre/0?sort=vote_average.desc        more_link = "/genre/0?sort=vote_average.desc"
     elif title == "🎬 قريبا في السينما": 
         more_link = "/upcoming"
     elif title == "⚽ انمي كورة": 
