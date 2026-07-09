@@ -322,12 +322,12 @@ def get_cards(items, media_type, title, scroll=True):
     elif title == "⚽ انمي كورة": 
         more_link = "/discover/tv?with_genres=16&with_keywords=football"
     elif title == "🔥 الاكثر رواجاً":
-        more_link = "/"
+        more_link = "/trending"  # صلحتها كانت /
     
     return Markup(f"""
     <div class="section">
         <h2>{title} <a href="{more_link}" style="font-size:14px; color:#E50914; float:left;">عرض الكل ›</a></h2>
-        <div class="row-container">
+        <div class="row-container">  <!-- ده مهم -->
             <button class="scroll-btn left">‹</button>
             <div class="cards-container {container_class}">
                 {cards_html}
@@ -336,7 +336,6 @@ def get_cards(items, media_type, title, scroll=True):
         </div>
     </div>
     """)
-
 def get_player(servers_html):
     return Markup(f'''
     <div class="section">
