@@ -375,17 +375,15 @@ def get_player(servers_html):
 def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
         return [
-            ('▶️ سيرفر 1 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/movie/{id}/ar'), # ده فيه ترجمة
-            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 3 - VidSrc.to', f'https://vidsrc.to/embed/movie/{id}'),
-            ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/movie/{id}')
+            ('▶️ سيرفر 1 - SuperEmbed مترجم', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 2 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
+            ('▶️ سيرفر 3 - Vidsrc.su', f'https://vidsrc.su/embed/movie/{id}/ar'),
         ]
     else:
         return [
-            ('▶️ سيرفر 1 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/tv/{id}/{season}/{episode}/ar'), # ده فيه ترجمة
-            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 3 - VidSrc.to', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
-            ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/tv/{id}')
+            ('▶️ سيرفر 1 - SuperEmbed مترجم', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 2 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
+            ('▶️ سيرفر 3 - Vidsrc.su', f'https://vidsrc.su/embed/tv/{id}/{season}/{episode}/ar'),
         ]
 
 def get_servers_html(servers, id, media_type, season=1, episode=1):
