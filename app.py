@@ -121,9 +121,9 @@ def trending_page():
     pagination = s.get_pagination(page, total_pages, '/trending')
     return s.base(content + pagination, "الاكثر رواجاً")
 
+
 @app.route('/')
 def home_page():
-    # هنشيل المصري مؤقتا لحد ما ينزلو TMDB
     featured_ids = [
         533535,  # Deadpool & Wolverine
         1022796, # Inside Out 2  
@@ -140,16 +140,14 @@ def home_page():
         if movie and movie.get('title'):
             results.append(movie)
     
-    # ضيفنا تشيك لو فاضي
     if not results:
         content = "<h2 style='text-align:center'>جاري تحميل الافلام...</h2>"
     else:
-        content = s.get_cards(results, 'movie', '🔥 افلام اليوم')
+        content = s.get_cards(results, 'movie', '🔥 افلام اليوم', scroll=True) # <-- زودت دي
     
     trending_link = '<div style="text-align:center; margin:20px;"><a href="/trending" class="btn">عرض المزيد 🔥</a></div>'
     
     return s.base(content + trending_link, "داخلين سينما")
-
 
 
 @app.route('/top-rated')
