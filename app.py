@@ -15,6 +15,10 @@ app.secret_key = os.environ.get('SECRET_KEY', 'dakhlin_secret_key_123')
 BASE_URL = "https://api.themoviedb.org/3"
 API_KEY = os.environ.get('TMDB_API_KEY')
 
+@app.route('/googleccfb7f75048a906c.html')
+def google_verify():
+    return send_from_directory('static', 'googleccfb7f75048a906c.html')
+
 @app.route("/")
 def index():
     print("API_KEY:", API_KEY)
