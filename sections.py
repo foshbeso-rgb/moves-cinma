@@ -1,22 +1,13 @@
 from flask import url_for
-from s import get_servers, get_servers_html
 from markupsafe import Markup
 import tmdb
 import os
 
+IMG_BASE = "https://image.tmdb.org/t/p/"
+
 def count_visitors():
-    # لو الملف مش موجود اعمله واكتب فيه 0
-    if not os.path.exists('visitors.txt'):
-        open('visitors.txt', 'w').write('0')
-    
-    # اقرا الرقم الحالي
-    count = int(open('visitors.txt', 'r').read())
-    
-    # زود 1 واحفظه
-    count += 1
-    open('visitors.txt', 'w').write(str(count))
-    
-    return count
+    # Vercel مبيسمحش بالكتابة في الملفات فبنرجع 0
+    return 0
 
 def footer():
     return Markup("""
@@ -102,8 +93,8 @@ def base(content, title="داخلين سينما", visitors=0):
         .back-btn:hover{{background:rgba(109,109,110,.9);}}
 
         /* Cards */
-        .section{{padding:30px 0;}} /* شلت 4% من هنا */
-        .section h2{{margin-bottom:15px; font-size:1.4vw; padding:0 4%;}} /* حطيت البادينج على العنوان */
+        .section{{padding:30px 0;}}
+        .section h2{{margin-bottom:15px; font-size:1.4vw; padding:0 4%;}}
         
         .cards-container.grid{{display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:15px; padding: 0 4%;}}
         
@@ -123,18 +114,18 @@ def base(content, title="داخلين سينما", visitors=0):
         .card-info .btn{{font-size:12px; padding:6px 10px; width:100%; margin:0;}}
 
         /* اسكرول للرئيسية */
-        .row-container{{position:relative; display:flex; align-items:center; padding:0 4%;}} /* البادينج هنا */
+        .row-container{{position:relative; display:flex; align-items:center; padding:0 4%;}}
         .cards-container.scroll{{
             display:flex; 
             overflow-x:auto; 
             overflow-y:hidden;
             gap:15px; 
-            padding:10px 0; /* مسافة فوق وتحت بس */
+            padding:10px 0;
             scroll-behavior:smooth;
             width:100%;
         }}
         .cards-container.scroll::-webkit-scrollbar{{display:none;}}
-        .cards-container.scroll .card{{width:200px; min-width:200px; flex-shrink:0;}} /* min-width مهم جدا */
+        .cards-container.scroll .card{{width:200px; min-width:200px; flex-shrink:0;}}
 
         .scroll-btn{{position:absolute; z-index:20; background:rgba(0,0,0,.7); border:none; color:#fff; font-size:30px; width:50px; height:100%; cursor:pointer; opacity:0; transition:opacity .3s; top:0;}}
         .row-container:hover .scroll-btn{{opacity:1;}}
@@ -160,7 +151,6 @@ def base(content, title="داخلين سينما", visitors=0):
         .footer-links a:hover{{color:#fff; text-decoration:underline;}}
         .footer p{{color:#757575; font-size:13px;}}
         
-        /* ده كان مبوظ الدنيا - مسحته */
         @media(max-width:900px){{.search-form input{{width:120px;}}}}
         @media(max-width:768px){{
             .nav-links{{display:none;}}
@@ -170,7 +160,7 @@ def base(content, title="داخلين سينما", visitors=0):
             .hero-desc{{font-size:3vw;}}
             .btn{{font-size:3.5vw;}}
             .cards-container.grid{{grid-template-columns: repeat(2, 1fr);}}
-            .cards-container.scroll .card{{width:45%; min-width:45%;}} /* خليته سكرول برضو في الموبايل */
+            .cards-container.scroll .card{{width:45%; min-width:45%;}}
         }}
         </style>
     </head>
@@ -279,7 +269,7 @@ def get_hero(item):
     if not item or not isinstance(item, dict): return Markup('')
     title = item.get('title') or item.get('name') or 'بدون عنوان'
     overview = item.get('overview', 'لا يوجد وصف')
-    backdrop = f"{tmdb.IMG_BASE}original{item['backdrop_path']}" if item.get('backdrop_path') else ''
+    backdrop = f"{IMG_BASE}original{item['backdrop_path']}" if item.get('backdrop_path') else ''
     year = item.get('release_date', item.get('first_air_date', ''))[:4]
     rate = round(item.get('vote_average', 0), 1)
     id = item.get('id', 0)
@@ -306,7 +296,7 @@ def get_card(item):
     
     title = item.get('title') or item.get('name') or "بدون اسم"
     poster = item.get('poster_path')
-    img = f"{tmdb.IMG_BASE}w500{poster}" if poster else "https://placehold.co/500x750/141414/555?text=No+Image"
+    img = f"{IMG_BASE}w500{poster}" if poster else "https://placehold.co/500x750/141414/555?text=No+Image"
     
     id = item.get('id', 0)
     m_type = item.get('media_type') 
@@ -320,7 +310,7 @@ def get_card(item):
     return f"""
     <div class="card">
         <a href="/watch/{m_type}/{id}">
-            <img src="{img}" alt="{title}">
+            <img src="{img}" alt="{title}" loading="lazy">
             <div class="card-info">
                 <h3>{title}</h3>
                 <div class="card-meta">⭐ {rate} | {year}</div>
@@ -330,33 +320,16 @@ def get_card(item):
         </a>
     </div>
     """
-def get_card(item):
-    poster = f"{IMG_BASE}w500{item.get('poster_path')}" if item.get('poster_path') else "/static/img/no-poster.jpg"
-    name = item.get('title') or item.get('name') or 'بدون اسم'
-    date = (item.get('release_date') or item.get('first_air_date') or '')[:4]
-    
-    # اهم سطر: اللينك
-    return f'''
-    <a href="/watch/{item['media_type']}/{item['id']}" class="card">
-        <img src="{poster}" alt="{name}" loading="lazy">
-        <div class="card-info">
-            <h3>{name}</h3>
-            <span>{date}</span>
-        </div>
-    </a>
-    '''
 
 def get_cards(items, media_type, title, scroll=True):
     if not items: return ''
     
-    # 1. نجبر ال media_type هنا عشان اللينك ميضربش
     for item in items:
         item['media_type'] = media_type 
     
     container_class = "scroll" if scroll else "grid"
     cards_html = "".join([get_card(item) for item in items])
     
-    # 2. لينكات عرض الكل
     more_link = "#"
     if title == "⭐ الاعلى تقييماً": 
         more_link = "/top-rated"
@@ -449,7 +422,6 @@ def get_servers(id, media_type, season=1, episode=1):
             ('▶️ سيرفر 3 - VidLink', f'https://vidlink.pro/movie/{id}'),
             ('▶️ سيرفر 4 - AutoEmbed', f'https://autoembed.co/movie/tmdb/{id}'),
             ('▶️ سيرفر 5 - MoviesAPI', f'https://moviesapi.club/movie/{id}'),
-            ('▶️ سيرفر 2 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/movie/{id}/ar'),
         ]
     else:
         return [
@@ -458,13 +430,12 @@ def get_servers(id, media_type, season=1, episode=1):
             ('▶️ سيرفر 3 - VidLink', f'https://vidlink.pro/tv/{id}/{season}/{episode}'),
             ('▶️ سيرفر 4 - AutoEmbed', f'https://autoembed.co/tv/tmdb/{id}/{season}/{episode}'),
             ('▶️ سيرفر 5 - MoviesAPI', f'https://moviesapi.club/tv/{id}-{season}-{episode}'),
-            ('▶️ سيرفر 2 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/tv/{id}/{season}/{episode}/ar'),
         ]
 
         
 def get_cast(cast):
     if not cast: return Markup('')
-    actors = ''.join([f'<a href="/search?q={c["name"]}" class="cast-card"><img src="{tmdb.IMG_BASE}w185{c["profile_path"]}"><h3>{c["name"]}</h3></a>' for c in cast[:15] if c.get('profile_path')])
+    actors = ''.join([f'<a href="/search?q={c["name"]}" class="cast-card"><img src="{IMG_BASE}w185{c["profile_path"]}"><h3>{c["name"]}</h3></a>' for c in cast[:15] if c.get('profile_path')])
     return Markup(f'<div class="section"><h2>الممثلين</h2><div class="cast-container">{actors}</div></div>')
 
 def get_pagination(page, total_pages, base_url):
