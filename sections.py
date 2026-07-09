@@ -330,32 +330,52 @@ def get_card(item):
         </a>
     </div>
     """
+def get_card(item):
+    poster = f"{IMG_BASE}w500{item.get('poster_path')}" if item.get('poster_path') else "/static/img/no-poster.jpg"
+    name = item.get('title') or item.get('name') or 'بدون اسم'
+    date = (item.get('release_date') or item.get('first_air_date') or '')[:4]
+    
+    # اهم سطر: اللينك
+    return f'''
+    <a href="/watch/{item['media_type']}/{item['id']}" class="card">
+        <img src="{poster}" alt="{name}" loading="lazy">
+        <div class="card-info">
+            <h3>{name}</h3>
+            <span>{date}</span>
+        </div>
+    </a>
+    '''
 
 def get_cards(items, media_type, title, scroll=True):
     if not items: return ''
+    
+    # 1. نجبر ال media_type هنا عشان اللينك ميضربش
+    for item in items:
+        item['media_type'] = media_type 
+    
     container_class = "scroll" if scroll else "grid"
     cards_html = "".join([get_card(item) for item in items])
     
-    # صلحت كل لينكات عرض الكل هنا
+    # 2. لينكات عرض الكل
     more_link = "#"
     if title == "⭐ الاعلى تقييماً": 
-        more_link = "/top-rated"  # كان /genre/0
+        more_link = "/top-rated"
     elif title == "🎬 قريبا في السينما": 
         more_link = "/upcoming"
     elif title == "⚽ انمي كورة": 
-        more_link = "/discover/tv?with_genres=16" # شيلت with_keywords عشان بيعمل ايرور
+        more_link = "/discover/tv?with_genres=16"
     elif title == "🔥 الاكثر رواجاً":
-        more_link = "/trending" # كان /
+        more_link = "/trending"
     elif title == "🇪🇬 افلام عربي":
         more_link = "/discover/movie?with_original_language=ar"
     elif title == "🇰🇷 مسلسلات كوري":
         more_link = "/discover/tv?with_origin_country=KR"
     elif title == "🇺🇸 افلام اكشن امريكي":
-        more_link = "/genre/28" # اكشن
+        more_link = "/genre/28"
     elif title == "🇺🇸 افلام كوميدي امريكي":
-        more_link = "/genre/35" # كوميدي
+        more_link = "/genre/35"
     elif title == "🇺🇸 مسلسلات دراما امريكي":
-        more_link = "/tv/genre/18" # دراما
+        more_link = "/tv/genre/18"
     
     return Markup(f"""
     <div class="section">
