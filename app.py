@@ -54,18 +54,14 @@ def index():
     us_action, _ = tmdb.discover_movies('en', 28, 1, 'popularity.desc', with_origin_country='US'); us_action = us_action[:20]
     us_comedy, _ = tmdb.discover_movies('en', 35, 1, 'popularity.desc', with_origin_country='US'); us_comedy = us_comedy[:20]
 
-    # افلام
     arabic_movies, _ = tmdb.discover_movies('ar', None, 1, 'release_date.desc', with_original_language='ar'); arabic_movies = arabic_movies[:20]
 
-    # مسلسلات
     us_drama_shows, _ = tmdb.discover_shows('en', 18); us_drama_shows = us_drama_shows[:20]
     k_drama, _ = tmdb.get_popular_by_lang('ko', 'tv'); k_drama = k_drama[:20]
-
-    # الجديد كله هنا 👇
-    c_drama, _ = tmdb.discover_shows('zh', None, 1); c_drama = c_drama[:20] # صيني
-    jp_drama, _ = tmdb.discover_shows('ja', None, 1); jp_drama = jp_drama[:20] # ياباني
-    tr_drama, _ = tmdb.discover_shows('tr', None, 1); tr_drama = tr_drama[:20] # تركي
-    ar_shows, _ = tmdb.discover_shows('ar', None, 1); ar_shows = ar_shows[:20] # عربي/مصري
+    c_drama, _ = tmdb.discover_shows('zh', None, 1); c_drama = c_drama[:20]
+    jp_drama, _ = tmdb.discover_shows('ja', None, 1); jp_drama = jp_drama[:20]
+    tr_drama, _ = tmdb.discover_shows('tr', None, 1); tr_drama = tr_drama[:20]
+    ar_shows, _ = tmdb.discover_shows('ar', None, 1); ar_shows = ar_shows[:20]
 
     hero = s.get_hero(trending[0] if trending else None)
     content = hero
@@ -73,19 +69,18 @@ def index():
     content += s.get_cards(trending, "all", "🔥 الاكثر رواجاً", scroll=True)
     content += s.get_cards(top_rated_movies, "movie", "⭐ الاعلى تقييماً", scroll=True)
     content += s.get_cards(upcoming, "movie", "🎬 قريبا في السينما", scroll=True)
-
     content += s.get_cards(soccer_anime, "tv", "⚽ انمي كورة", scroll=True)
     content += s.get_cards(us_action, "movie", "🇺🇸 افلام اكشن امريكي", scroll=True)
     content += s.get_cards(us_comedy, "movie", "🇺🇸 افلام كوميدي امريكي", scroll=True)
     content += s.get_cards(arabic_movies, "movie", "🇪🇬 افلام عربي", scroll=True)
-
-    # كل اقسام المسلسلات
     content += s.get_cards(us_drama_shows, "tv", "🇺🇸 مسلسلات دراما امريكي", scroll=True)
     content += s.get_cards(k_drama, "tv", "🇰🇷 مسلسلات كوري", scroll=True)
-    content += s.get_cards(c_drama, "tv", "🇨🇳 مسلسلات صيني", scroll=True)
-    content += s.get_cards(jp_drama, "tv", "🇯🇵 مسلسلات ياباني", scroll=True)
-    content += s.get_cards(tr_drama, "tv", "🇹🇷 مسلسلات تركي", scroll=True)
-    content += s.get_cards(ar_shows, "tv", "🇪🇬 مسلسلات عربي", scroll=True)
+
+    # حطيت if عشان ميوقعش لو فاضي
+    if c_drama: content += s.get_cards(c_drama, "tv", "🇨🇳 مسلسلات صيني", scroll=True)
+    if jp_drama: content += s.get_cards(jp_drama, "tv", "🇯🇵 مسلسلات ياباني", scroll=True)
+    if tr_drama: content += s.get_cards(tr_drama, "tv", "🇹🇷 مسلسلات تركي", scroll=True)
+    if ar_shows: content += s.get_cards(ar_shows, "tv", "🇪🇬 مسلسلات عربي", scroll=True)
 
     visitors = count_visitors()
     return s.base(content, "الرئيسية", visitors=visitors)
@@ -153,19 +148,6 @@ def genre_page(genre_id):
     title = genre_names.get(genre_id, 'افلام')
     content = s.get_cards(movies, "movie", f"افلام {title}")
     content += s.get_pagination(page, total_pages, f"/genre/{genre_id}")
-
-    arabic_movies, _ = tmdb.discover_movies('ar', None, 1, 'popularity.desc', with_original_language='ar')
-    content += s.get_cards(arabic_movies, "movie", "🇪🇬 افلام عربي", scroll=True)
-
-    korean_movies, _ = tmdb.discover_movies('ko', None, 1, 'popularity.desc', with_origin_country='KR')
-    content += s.get_cards(korean_movies, "movie", "🇰🇷 افلام كوري", scroll=True)
-
-    japan_movies, _ = tmdb.discover_movies('ja', None, 1, 'popularity.desc', with_origin_country='JP')
-    content += s.get_cards(japan_movies, "movie", "🇯🇵 افلام ياباني", scroll=True)
-
-    india_movies, _ = tmdb.discover_movies('hi', None, 1, 'popularity.desc', with_origin_country='IN')
-    content += s.get_cards(india_movies, "movie", "🇮🇳 افلام هندي", scroll=True)
-
     visitors = count_visitors()
     return s.base(content, f"افلام {title}", visitors=visitors)
 
@@ -192,7 +174,6 @@ def watch_movie(id):
         visitors = count_visitors()
         return s.base(f"<h2>خطأ: {e}</h2>", "خطأ", visitors=visitors)
 
-# ده الروت الناقص بتاع المسلسلات
 @app.route("/watch/tv/<int:id>/<int:season>/<int:episode>")
 def watch_tv(id, season, episode):
     try:
@@ -247,7 +228,7 @@ def discover_movies_page():
 def discover_tv_page():
     try:
         genre = request.args.get('with_genres', '')
-        language = request.args.get('language', '')
+        language = request.args.get('with_original_language', '') # غيرت دي
         page = int(request.args.get('page', 1))
 
         if genre == '16':
@@ -255,12 +236,32 @@ def discover_tv_page():
             title = "⚽ انمي كورة"
             pagination_link = f"/discover/tv?with_genres=16"
 
-        elif language == 'ko':
+        elif language == 'ko': # كوري
             results, total_pages = tmdb.discover_shows(language='ko', page=page)
             title = "🇰🇷 مسلسلات كوري"
-            pagination_link = f"/discover/tv?language=ko"
+            pagination_link = f"/discover/tv?with_original_language=ko"
 
-        else:
+        elif language == 'zh': # صيني جديد
+            results, total_pages = tmdb.discover_shows(language='zh', page=page)
+            title = "🇨🇳 مسلسلات صيني"
+            pagination_link = f"/discover/tv?with_original_language=zh"
+
+        elif language == 'ja': # ياباني جديد
+            results, total_pages = tmdb.discover_shows(language='ja', page=page)
+            title = "🇯🇵 مسلسلات ياباني"
+            pagination_link = f"/discover/tv?with_original_language=ja"
+
+        elif language == 'tr': # تركي جديد
+            results, total_pages = tmdb.discover_shows(language='tr', page=page)
+            title = "🇹🇷 مسلسلات تركي"
+            pagination_link = f"/discover/tv?with_original_language=tr"
+
+        elif language == 'ar': # عربي جديد
+            results, total_pages = tmdb.discover_shows(language='ar', page=page)
+            title = "🇪🇬 مسلسلات عربي"
+            pagination_link = f"/discover/tv?with_original_language=ar"
+
+        else: # الافتراضي
             results, total_pages = tmdb.discover_shows(language='en', page=page)
             title = "🇺🇸 مسلسلات اجنبي"
             pagination_link = f"/discover/tv"
