@@ -210,7 +210,7 @@ def discover_movies_page():
 def discover_tv_page():
     try:
         genre = request.args.get('with_genres', '')
-        language = request.args.get('language', '') # لو فاضي يبقى اجنبي
+        language = request.args.get('language', '')
         page = int(request.args.get('page', 1))
         
         if genre == '16': # انمي كورة
@@ -221,7 +221,7 @@ def discover_tv_page():
         elif language == 'ko': # كوري
             results, total_pages = tmdb.discover_shows(language='ko', page=page)
             title = "🇰🇷 مسلسلات كوري"
-            pagination_link = f"/discover/tv?language=ko" # اهم سطر
+            pagination_link = f"/discover/tv?language=ko"
             
         else: # الافتراضي اجنبي
             results, total_pages = tmdb.discover_shows(language='en', page=page)
@@ -230,10 +230,10 @@ def discover_tv_page():
         
         content = s.get_cards(results, "tv", title, scroll=False)
         content += s.get_pagination(page, total_pages, pagination_link)
-        return s.base(content, title, visitors=count_visitors()) # استخدم count_visitors مش s.count_visitors
+        return s.base(content, title, visitors=0) # شلت count_visitors
         
     except Exception as e:
-        return f"<h1>Error</h1><p>{e}</p>"
+        return f"<h1>Error</h1><p>{e}</p><p>URL: {request.url}</p>"
 
 @app.route("/tv/genre/<int:genre_id>")
 def tv_genre_page(genre_id):
