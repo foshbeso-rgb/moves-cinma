@@ -337,6 +337,8 @@ def get_cards(items, media_type, title, scroll=True):
     </div>
     """)
 
+from markupsafe import Markup
+
 def get_player(servers_html):
     return Markup(f'''
     <div class="section">
@@ -352,16 +354,20 @@ def get_player(servers_html):
     function loadServer(url, btn){{
         document.getElementById('player-frame').src = url;
         document.querySelectorAll('.server-btn').forEach(b=>b.classList.remove('active'));
-        btn.parentElement.classList.add('active');
-        btn.style.background = '#E50914';
+        btn.classList.add('active'); // شيلت parentElement
     }}
     window.onload = () => {{
-        let firstBtn = document.querySelector('.server-btn button');
+        let firstBtn = document.querySelector('.server-btn'); // شيلت button
         if(firstBtn) firstBtn.click();
     }}
     </script>
     <style>
-    .server-btn.active button{{ background:#E50914 !important; }}
+    .server-btn {{
+        padding:10px 15px; background:#222; color:#fff; border:none; 
+        border-radius:6px; cursor:pointer; font-weight:bold;
+    }}
+    .server-btn.active {{ background:#E50914 !important; }}
+    .server-btn:hover {{ background:#333; }}
     </style>
     ''')
 
