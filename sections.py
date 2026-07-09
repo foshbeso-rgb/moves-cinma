@@ -336,6 +336,8 @@ def get_cards(items, media_type, title, scroll=True):
         </div>
     </div>
     """)
+
+    
 def get_player(servers_html):
     return Markup(f'''
     <div class="section">
@@ -380,8 +382,11 @@ def get_player(servers_html):
     </style>
     ''')
 
-def get_servers_html(servers):
-    return ''.join([f'<button class="btn" onclick="window.location.href=\'{s}\'">{name}</button>' for name, s in servers])
+def get_servers_html(servers, id, media_type, season=1, episode=1):
+    html = ''
+    for name, url in servers:
+        html += f'<button class="server-btn" onclick="loadServer(\'{url}\', this)">{name}</button>'
+    return html
 
 def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
