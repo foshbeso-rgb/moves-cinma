@@ -347,17 +347,17 @@ def get_player(servers_html):
             {servers_html}
         </div>
         <div class="player">
-            <iframe id="player-frame" src="" frameborder="0" allowfullscreen style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
+            <iframe id="player-frame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen" style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
         </div>
     </div>
     <script>
     function loadServer(url, btn){{
         document.getElementById('player-frame').src = url;
         document.querySelectorAll('.server-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active'); // شيلت parentElement
+        btn.classList.add('active');
     }}
     window.onload = () => {{
-        let firstBtn = document.querySelector('.server-btn'); // شيلت button
+        let firstBtn = document.querySelector('.server-btn');
         if(firstBtn) firstBtn.click();
     }}
     </script>
