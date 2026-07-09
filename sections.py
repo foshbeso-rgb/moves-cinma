@@ -18,7 +18,6 @@ def count_visitors():
     
     return count
 
-
 def footer():
     return Markup("""
     <footer style="background: #0a0a0a; color: #ccc; padding: 30px 20px; text-align: center; margin-top: 50px; border-top: 1px solid #222;">
@@ -42,7 +41,7 @@ def footer():
     </footer>
     """)
 
-def base(content, title="داخلين سينما"):
+def base(content, title="داخلين سينما", visitors=0):
     return Markup(f"""
     <!DOCTYPE html>
     <html lang="ar" dir="rtl">
@@ -180,6 +179,13 @@ def base(content, title="داخلين سينما"):
         {navbar()}
         {content}
         {footer()}
+
+        <!-- العداد والترحيب الصوتي -->
+        <p style="text-align:center; color:#e50914; padding:20px 0 40px 0; font-weight:bold; font-size:16px;">👀 عدد الزوار: {visitors}</p>
+        <audio id="welcome" autoplay>
+            <source src="https://www.soundjay.com/human/sounds/welcome-1.mp3" type="audio/mpeg">
+        </audio>
+
         <script>
         document.querySelectorAll('.row-container').forEach(row => {{
             const container = row.querySelector('.cards-container.scroll');
