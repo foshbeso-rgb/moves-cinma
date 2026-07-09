@@ -336,15 +336,26 @@ def get_cards(items, media_type, title, scroll=True):
     container_class = "scroll" if scroll else "grid"
     cards_html = "".join([get_card(item) for item in items])
     
+    # صلحت كل لينكات عرض الكل هنا
     more_link = "#"
     if title == "⭐ الاعلى تقييماً": 
-        more_link = "/genre/0?sort=vote_average.desc"
+        more_link = "/top-rated"  # كان /genre/0
     elif title == "🎬 قريبا في السينما": 
         more_link = "/upcoming"
     elif title == "⚽ انمي كورة": 
-        more_link = "/discover/tv?with_genres=16&with_keywords=football"
+        more_link = "/discover/tv?with_genres=16" # شيلت with_keywords عشان بيعمل ايرور
     elif title == "🔥 الاكثر رواجاً":
-        more_link = "/"
+        more_link = "/trending" # كان /
+    elif title == "🇪🇬 افلام عربي":
+        more_link = "/discover/movie?with_original_language=ar"
+    elif title == "🇰🇷 مسلسلات كوري":
+        more_link = "/discover/tv?with_origin_country=KR"
+    elif title == "🇺🇸 افلام اكشن امريكي":
+        more_link = "/genre/28" # اكشن
+    elif title == "🇺🇸 افلام كوميدي امريكي":
+        more_link = "/genre/35" # كوميدي
+    elif title == "🇺🇸 مسلسلات دراما امريكي":
+        more_link = "/tv/genre/18" # دراما
     
     return Markup(f"""
     <div class="section">
