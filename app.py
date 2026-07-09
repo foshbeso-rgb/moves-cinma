@@ -136,14 +136,17 @@ def home_page():
     
     results = []
     for movie_id in featured_ids:
-        movie = tmdb.get_movie_details(movie_id)
-        if movie and movie.get('title'):
-            results.append(movie)
+        try: # لفيناه عشان لو فيلم وقع ميوقعش الموقع كله
+            movie = tmdb.get_movie_details(movie_id)
+            if movie and movie.get('title') and movie.get('poster_path'): # زودنا تشيك البوستر
+                results.append(movie)
+        except:
+            print(f"Error in movie id: {movie_id}") # هيطبع في logs
     
     if not results:
-        content = "<h2 style='text-align:center'>جاري تحميل الافلام...</h2>"
+        content = "<h2 style='text-align:center; padding:50px;'>في مشكلة في تحميل الافلام حاول تاني</h2>"
     else:
-        content = s.get_cards(results, 'movie', '🔥 افلام اليوم', scroll=True) # <-- زودت دي
+        content = s.get_cards(results, 'movie', '🔥 افلام اليوم', scroll=True)
     
     trending_link = '<div style="text-align:center; margin:20px;"><a href="/trending" class="btn">عرض المزيد 🔥</a></div>'
     
