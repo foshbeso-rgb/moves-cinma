@@ -346,8 +346,9 @@ def get_player(servers_html):
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
             {servers_html}
         </div>
-        <div class="player">
-            <iframe id="player-frame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
+        <div class="player" id="player-container">
+            <button onclick="toggleFullscreen()" style="position:absolute; top:10px; right:10px; z-index:100; padding:8px 12px; background:#E50914; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">⛶ تكبير</button>
+            <iframe id="player-frame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media" style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
         </div>
     </div>
     <script>
@@ -356,6 +357,18 @@ def get_player(servers_html):
         document.querySelectorAll('.server-btn').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');
     }}
+
+    function toggleFullscreen() {{
+        let elem = document.getElementById("player-container");
+        if (!document.fullscreenElement) {{
+            elem.requestFullscreen().catch(err => {{
+                alert(`Error: ${err.message}`);
+            }});
+        }} else {{
+            document.exitFullscreen();
+        }}
+    }}
+
     window.onload = () => {{
         let firstBtn = document.querySelector('.server-btn');
         if(firstBtn) firstBtn.click();
@@ -368,6 +381,7 @@ def get_player(servers_html):
     }}
     .server-btn.active {{ background:#E50914 !important; }}
     .server-btn:hover {{ background:#333; }}
+    .player{{position:relative;}} /* مهم عشان الزرار يطلع فوق الفيديو */
     </style>
     ''')
 
