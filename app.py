@@ -1,3 +1,8 @@
+import traceback
+@app.errorhandler(500)
+def internal_error(error):
+    return f"<pre>{traceback.format_exc()}</pre>", 500
+
 from flask import Flask, render_template, request, jsonify, session, redirect
 from markupsafe import Markup
 import tmdb
