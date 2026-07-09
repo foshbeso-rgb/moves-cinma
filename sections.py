@@ -365,22 +365,24 @@ def get_player(servers_html):
     </style>
     ''')
 
-def get_servers(media_type, media_id, season=None, episode=None):
-    if media_type == "movie":
+def get_servers(id, media_type, season=1, episode=1):
+    if media_type == 'movie':
         return [
-            {"name": "سيرفر 1", "url": f"https://vidsrc.xyz/embed/movie/{media_id}"},
-            {"name": "سيرفر 2", "url": f"https://vidlink.pro/movie/{media_id}"},
-            {"name": "سيرفر 3", "url": f"https://multiembed.mov/directstream.php?video_id={media_id}"},
-            {"name": "سيرفر 4", "url": f"https://www.2embed.cc/embed/{media_id}"},
-            {"name": "سيرفر 5", "url": f"https://smashy.stream/m/{media_id}"},
+            ('▶️ سيرفر 1 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
+            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 3 - MoviesAPI', f'https://moviesapi.club/movie/{id}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 4 - VidCloud', f'https://vidcloud.icu/embed/movie/{id}'),  # جديد 1
+            ('▶️ سيرفر 5 - Smashy', f'https://smashy.stream/embed/movie/{id}'),    # جديد 2
+            ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/movie/{id}')
         ]
     else:
         return [
-            {"name": "سيرفر 1", "url": f"https://vidsrc.xyz/embed/tv/{media_id}/{season}-{episode}"},
-            {"name": "سيرفر 2", "url": f"https://vidlink.pro/tv/{media_id}/{season}/{episode}"},
-            {"name": "سيرفر 3", "url": f"https://multiembed.mov/directstream.php?video_id={media_id}&s={season}&e={episode}"},
-            {"name": "سيرفر 4", "url": f"https://www.2embed.cc/embedtv/{media_id}&s={season}&e={episode}"},
-            {"name": "سيرفر 5", "url": f"https://smashy.stream/s/{media_id}/{season}/{episode}"},
+            ('▶️ سيرفر 1 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
+            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 3 - MoviesAPI', f'https://moviesapi.club/serie/{id}/{season}/{episode}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 4 - VidCloud', f'https://vidcloud.icu/embed/tv/{id}/{season}/{episode}'),  # جديد 1
+            ('▶️ سيرفر 5 - Smashy', f'https://smashy.stream/embed/tv/{id}/{season}/{episode}'),    # جديد 2
+            ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/tv/{id}')
         ]
         
 def get_cast(cast):
