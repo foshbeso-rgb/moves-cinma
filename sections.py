@@ -365,25 +365,24 @@ def get_player(servers_html):
     </style>
     ''')
 
-def get_servers_html(servers):
-    return ''.join([f'<button class="btn" onclick="window.location.href=\'{s}\'">{name}</button>' for name, s in servers])
-
-def get_servers(id, media_type, season=1, episode=1):
-    if media_type == 'movie':
+def get_servers(media_type, media_id, season=None, episode=None):
+    if media_type == "movie":
         return [
-            ('▶️ تشغيل 1 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
-            ('▶️ تشغيل 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
-            ('▶️ تشغيل 3 - MoviesAPI', f'https://moviesapi.club/movie/{id}&lang=ar&sublang=ar'),
-            ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/movie/{id}')
+            {"name": "سيرفر 1", "url": f"https://vidsrc.xyz/embed/movie/{media_id}"},
+            {"name": "سيرفر 2", "url": f"https://vidlink.pro/movie/{media_id}"},
+            {"name": "سيرفر 3", "url": f"https://multiembed.mov/directstream.php?video_id={media_id}"},
+            {"name": "سيرفر 4", "url": f"https://www.2embed.cc/embed/{media_id}"},
+            {"name": "سيرفر 5", "url": f"https://smashy.stream/m/{media_id}"},
         ]
     else:
         return [
-            ('▶️ تشغيل 1 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
-            ('▶️ تشغيل 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
-            ('▶️ تشغيل 3 - MoviesAPI', f'https://moviesapi.club/serie/{id}/{season}/{episode}&lang=ar&sublang=ar'),
-            ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/tv/{id}')
+            {"name": "سيرفر 1", "url": f"https://vidsrc.xyz/embed/tv/{media_id}/{season}-{episode}"},
+            {"name": "سيرفر 2", "url": f"https://vidlink.pro/tv/{media_id}/{season}/{episode}"},
+            {"name": "سيرفر 3", "url": f"https://multiembed.mov/directstream.php?video_id={media_id}&s={season}&e={episode}"},
+            {"name": "سيرفر 4", "url": f"https://www.2embed.cc/embedtv/{media_id}&s={season}&e={episode}"},
+            {"name": "سيرفر 5", "url": f"https://smashy.stream/s/{media_id}/{season}/{episode}"},
         ]
-
+        
 def get_cast(cast):
     if not cast: return Markup('')
     actors = ''.join([f'<a href="/search?q={c["name"]}" class="cast-card"><img src="{tmdb.IMG_BASE}w185{c["profile_path"]}"><h3>{c["name"]}</h3></a>' for c in cast[:15] if c.get('profile_path')])
