@@ -210,29 +210,30 @@ def discover_movies_page():
 def discover_tv_page():
     try:
         genre = request.args.get('with_genres', '')
-        country = request.args.get('with_origin_country', '')
-        language = request.args.get('language', 'en') # ضفنا دي
+        language = request.args.get('language', '') # لو فاضي يبقى اجنبي
         page = int(request.args.get('page', 1))
         
         if genre == '16': # انمي كورة
-            results, total_pages = tmdb.discover_shows(genre=16, page=page)
-            title = " انمى "
+            results, total_pages = tmdb.discover_shows(genre=16, language='ja', page=page)
+            title = "⚽ انمي كورة"
+            pagination_link = f"/discover/tv?with_genres=16"
             
         elif language == 'ko': # كوري
             results, total_pages = tmdb.discover_shows(language='ko', page=page)
             title = "🇰🇷 مسلسلات كوري"
+            pagination_link = f"/discover/tv?language=ko" # اهم سطر
             
-        else:
-            results, total_pages = tmdb.discover_shows(page=page)
-            title = "مسلسلات"
+        else: # الافتراضي اجنبي
+            results, total_pages = tmdb.discover_shows(language='en', page=page)
+            title = "🇺🇸 مسلسلات اجنبي"
+            pagination_link = f"/discover/tv"
         
         content = s.get_cards(results, "tv", title, scroll=False)
-        # مهم: الباجينيشن لازم يحتفظ باللغة
-        pagination_link = f"/discover/tv?language={language}&with_genres={genre}"
         content += s.get_pagination(page, total_pages, pagination_link)
-        return s.base(content, title, visitors=s.count_visitors())
+        return s.base(content, title, visitors=count_visitors()) # استخدم count_visitors مش s.count_visitors
+        
     except Exception as e:
-        return f"Error: {e}"
+        return f"<h1>Error</h1><p>{e}</p>"
 
 @app.route("/tv/genre/<int:genre_id>")
 def tv_genre_page(genre_id):
