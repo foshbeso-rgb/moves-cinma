@@ -361,9 +361,7 @@ def get_player(servers_html):
     function toggleFullscreen() {{
         let elem = document.getElementById("player-container");
         if (!document.fullscreenElement) {{
-            elem.requestFullscreen().catch(err => {{
-                alert(`Error: ${err.message}`);
-            }});
+            elem.requestFullscreen();
         }} else {{
             document.exitFullscreen();
         }}
@@ -381,10 +379,9 @@ def get_player(servers_html):
     }}
     .server-btn.active {{ background:#E50914 !important; }}
     .server-btn:hover {{ background:#333; }}
-    .player{{position:relative;}} /* مهم عشان الزرار يطلع فوق الفيديو */
+    .player{{position:relative;}}
     </style>
     ''')
-
     
 def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
