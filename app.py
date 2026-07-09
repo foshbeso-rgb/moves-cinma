@@ -123,7 +123,7 @@ def trending_page():
 
 @app.route('/')
 def home_page():
-    # 10 افلام نثبتهم بال ID بتاع TMDB
+    # هنشيل المصري مؤقتا لحد ما ينزلو TMDB
     featured_ids = [
         533535,  # Deadpool & Wolverine
         1022796, # Inside Out 2  
@@ -136,14 +136,19 @@ def home_page():
     
     results = []
     for movie_id in featured_ids:
-        movie = tmdb.get_movie_details(movie_id) # موجودة عندك اهي
-        if movie and movie.get('title'): # نتأكد انه فيلم
+        movie = tmdb.get_movie_details(movie_id)
+        if movie and movie.get('title'):
             results.append(movie)
     
-    content = s.get_cards(results, 'movie', '🔥 افلام اليوم', scroll=False)
+    # ضيفنا تشيك لو فاضي
+    if not results:
+        content = "<h2 style='text-align:center'>جاري تحميل الافلام...</h2>"
+    else:
+        content = s.get_cards(results, 'movie', '🔥 افلام اليوم')
+    
     trending_link = '<div style="text-align:center; margin:20px;"><a href="/trending" class="btn">عرض المزيد 🔥</a></div>'
     
-    return s.base(content + trending_link, "داخلين سينما - مشاهدة افلام ومسلسلات")
+    return s.base(content + trending_link, "داخلين سينما")
 
 
 
