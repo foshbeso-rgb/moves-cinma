@@ -244,11 +244,11 @@ def navbar():
                     <a href="#">مسلسلات ▼</a>
                     <div class="dropdown-content">
                         <b style="padding:8px 5px; color:#E50914; display:block;">حسب الدولة</b>
-                        <a href="/discover/tv?with_origin_country=EG">🇪🇬 مسلسلات مصري</a>
-                        <a href="/discover/tv?with_origin_country=TR">🇹🇷 مسلسلات تركي</a>
-                        <a href="/discover/tv?language=ko">🇰🇷 دراما كوري</a>
-                        <a href="/discover/tv?with_origin_country=CN">🇨🇳 دراما صيني</a>
-                        <a href="/discover/tv?with_origin_country=JP">🇯🇵 دراما ياباني</a>
+                        <a href="/discover/tv?with_original_language=ar">🇪🇬 مسلسلات عربي</a>
+                        <a href="/discover/tv?with_original_language=tr">🇹🇷 مسلسلات تركي</a>
+                        <a href="/discover/tv?with_original_language=ko">🇰🇷 دراما كوري</a>
+                        <a href="/discover/tv?with_original_language=zh">🇨🇳 دراما صيني</a>
+                        <a href="/discover/tv?with_original_language=ja">🇯🇵 دراما ياباني</a>
                         <a href="/discover/tv?with_genres=16">🧸 انمي</a>
                     </div>
                 </div>
@@ -340,9 +340,17 @@ def get_cards(items, media_type, title, scroll=True):
     elif title == "🔥 الاكثر رواجاً":
         more_link = "/trending"
     elif title == "🇪🇬 افلام عربي":
-        more_link = "/discover/movie?with_original_language=ar" # ده التعديل
+        more_link = "/discover/movie?with_original_language=ar"
     elif title == "🇰🇷 مسلسلات كوري":
-        more_link = "/discover/tv?language=ko" # وده التعديل
+        more_link = "/discover/tv?with_original_language=ko"
+    elif title == "🇨🇳 مسلسلات صيني":
+        more_link = "/discover/tv?with_original_language=zh"
+    elif title == "🇯🇵 مسلسلات ياباني":
+        more_link = "/discover/tv?with_original_language=ja"
+    elif title == "🇹🇷 مسلسلات تركي":
+        more_link = "/discover/tv?with_original_language=tr"
+    elif title == "🇪🇬 مسلسلات عربي":
+        more_link = "/discover/tv?with_original_language=ar"
     elif title == "🇺🇸 افلام اكشن امريكي":
         more_link = "/genre/28"
     elif title == "🇺🇸 افلام كوميدي امريكي":
