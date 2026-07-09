@@ -132,9 +132,6 @@ def home_page():
         614479,  # Kingdom of the Planet of the Apes
         945961,  # A Quiet Place: Day One
         1023545, # Twisters
-        1300848, # المشروع X
-        1300849, # ولاد رزق 3
-        1300850, # اللعب مع العيال
     ]
     
     results = []
