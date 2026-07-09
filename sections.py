@@ -391,19 +391,19 @@ def get_servers_html(servers, id, media_type, season=1, episode=1):
 def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
         return [
-            ('▶️ سيرفر 1 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'), # خليه الاول
+            ('▶️ سيرفر 1 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
             ('▶️ سيرفر 2 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/movie/{id}/ar'),
-            ('▶️ سيرفر 3 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
-            ('▶️ سيرفر 4 - Smiles', f'https://www.2embed.cc/embed/movie/{id}'),
-            ('▶️ سيرفر 5 - VidLink', f'https://vidlink.pro/movie/{id}'),
+            ('▶️ سيرفر 3 - VidLink', f'https://vidlink.pro/movie/{id}'),
+            ('▶️ سيرفر 4 - AutoEmbed', f'https://autoembed.co/movie/tmdb/{id}'),
+            ('▶️ سيرفر 5 - MoviesAPI', f'https://moviesapi.club/movie/{id}'),
         ]
     else:
         return [
-            ('▶️ سيرفر 1 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'), # خليه الاول
+            ('▶️ سيرفر 1 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
             ('▶️ سيرفر 2 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/tv/{id}/{season}/{episode}/ar'),
-            ('▶️ سيرفر 3 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
-            ('▶️ سيرفر 4 - Smiles', f'https://www.2embed.cc/embed/tv/{id}&s={season}&e={episode}'),
-            ('▶️ سيرفر 5 - VidLink', f'https://vidlink.pro/tv/{id}/{season}/{episode}'),
+            ('▶️ سيرفر 3 - VidLink', f'https://vidlink.pro/tv/{id}/{season}/{episode}'),
+            ('▶️ سيرفر 4 - AutoEmbed', f'https://autoembed.co/tv/tmdb/{id}/{season}/{episode}'),
+            ('▶️ سيرفر 5 - MoviesAPI', f'https://moviesapi.club/tv/{id}-{season}-{episode}'),
         ]
 
         
