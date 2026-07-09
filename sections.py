@@ -246,7 +246,7 @@ def navbar():
                         <b style="padding:8px 5px; color:#E50914; display:block;">حسب الدولة</b>
                         <a href="/discover/tv?with_origin_country=EG">🇪🇬 مسلسلات مصري</a>
                         <a href="/discover/tv?with_origin_country=TR">🇹🇷 مسلسلات تركي</a>
-                        <a href="/discover/tv?with_origin_country=KR">🇰🇷 دراما كوري</a>
+                        <a href="/discover/tv?language=ko">🇰🇷 دراما كوري</a>
                         <a href="/discover/tv?with_origin_country=CN">🇨🇳 دراما صيني</a>
                         <a href="/discover/tv?with_origin_country=JP">🇯🇵 دراما ياباني</a>
                         <a href="/discover/tv?with_genres=16">🧸 انمي</a>
@@ -335,14 +335,14 @@ def get_cards(items, media_type, title, scroll=True):
         more_link = "/top-rated"
     elif title == "🎬 قريبا في السينما": 
         more_link = "/upcoming"
-    elif title == "انمى ": 
+    elif title == "⚽ انمي كورة": 
         more_link = "/discover/tv?with_genres=16"
     elif title == "🔥 الاكثر رواجاً":
         more_link = "/trending"
     elif title == "🇪🇬 افلام عربي":
-        more_link = "/discover/tv?language=ko"
-     elif title == "🇰🇷 مسلسلات كوري":
-        more_link = "/discover/tv?language=ko"
+        more_link = "/discover/movie?with_original_language=ar" # ده التعديل
+    elif title == "🇰🇷 مسلسلات كوري":
+        more_link = "/discover/tv?language=ko" # وده التعديل
     elif title == "🇺🇸 افلام اكشن امريكي":
         more_link = "/genre/28"
     elif title == "🇺🇸 افلام كوميدي امريكي":
