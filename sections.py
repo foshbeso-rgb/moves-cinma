@@ -371,19 +371,22 @@ def get_servers_html(servers):
 def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
         return [
-            ('▶️ تشغيل 1 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
-            ('▶️ تشغيل 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
-            ('▶️ تشغيل 3 - MoviesAPI', f'https://moviesapi.club/movie/{id}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 1 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
+            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 3 - MoviesAPI', f'https://moviesapi.club/movie/{id}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 4 - VidCloud', f'https://vidcloud.icu/embed/movie/{id}'),  # جديد 1
+            ('▶️ سيرفر 5 - Smashy', f'https://smashy.stream/embed/movie/{id}'),    # جديد 2
             ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/movie/{id}')
         ]
     else:
         return [
-            ('▶️ تشغيل 1 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
-            ('▶️ تشغيل 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
-            ('▶️ تشغيل 3 - MoviesAPI', f'https://moviesapi.club/serie/{id}/{season}/{episode}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 1 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
+            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 3 - MoviesAPI', f'https://moviesapi.club/serie/{id}/{season}/{episode}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 4 - VidCloud', f'https://vidcloud.icu/embed/tv/{id}/{season}/{episode}'),  # جديد 1
+            ('▶️ سيرفر 5 - Smashy', f'https://smashy.stream/embed/tv/{id}/{season}/{episode}'),    # جديد 2
             ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/tv/{id}')
         ]
-
 def get_cast(cast):
     if not cast: return Markup('')
     actors = ''.join([f'<a href="/search?q={c["name"]}" class="cast-card"><img src="{tmdb.IMG_BASE}w185{c["profile_path"]}"><h3>{c["name"]}</h3></a>' for c in cast[:15] if c.get('profile_path')])
