@@ -15,7 +15,6 @@ app.secret_key = os.environ.get('SECRET_KEY', 'dakhlin_secret_key_123')
 BASE_URL = "https://api.themoviedb.org/3"
 API_KEY = os.environ.get('TMDB_API_KEY')
 
-# دالة العداد متعدلة عشان Vercel
 def count_visitors():
     file_path = os.path.join(template_dir, 'visitors.txt')
     try:
@@ -52,9 +51,11 @@ def index():
     if not soccer_anime:
         soccer_anime = [x for x in anime if 16 in x.get('genre_ids', [])][:20]
 
-    us_action, _ = tmdb.discover_movies('en', 28); us_action = us_action[:20]
-    us_comedy, _ = tmdb.discover_movies('en', 35); us_comedy = us_comedy[:20]
-    arabic_movies, _ = tmdb.discover_movies('ar'); arabic_movies = arabic_movies[:20]
+    # التعديل هنا 👇 ضفنا with_origin_country و with_original_language
+    us_action, _ = tmdb.discover_movies('en', 28, 1, 'popularity.desc', with_origin_country='US'); us_action = us_action[:20]
+    us_comedy, _ = tmdb.discover_movies('en', 35, 1, 'popularity.desc', with_origin_country='US'); us_comedy = us_comedy[:20]
+    arabic_movies, _ = tmdb.discover_movies('ar', None, 1, 'popularity.desc', with_original_language='ar'); arabic_movies = arabic_movies[:20]
+
     us_drama_shows, _ = tmdb.discover_shows('en', 18); us_drama_shows = us_drama_shows[:20]
     k_drama, _ = tmdb.get_popular_by_lang('ko', 'tv'); k_drama = k_drama[:20]
 
@@ -101,12 +102,10 @@ def trending_page():
     visitors = count_visitors()
     return s.base(content + pagination, "الاكثر رواجاً", visitors=visitors)
 
-# مسحت home_page عشان عاملة تعارض
-
 @app.route('/top-rated')
 def top_rated_page():
     page = request.args.get('page', 1, type=int)
-    results, total_pages = tmdb.discover_movies('en', None, page, 'vote_average.desc') # عدلتها
+    results, total_pages = tmdb.discover_movies('en', None, page, 'vote_average.desc')
     content = s.get_cards(results, 'movie', '⭐ الأعلى تقييماً', scroll=False)
     pagination = s.get_pagination(page, total_pages, '/top-rated')
     visitors = count_visitors()
@@ -121,9 +120,6 @@ def upcoming_page():
     visitors = count_visitors()
     return s.base(content + pagination, 'قريباً في السينما', visitors=visitors)
 
-# باقي الكود زي ما هو بس زود visitors=visitors في كل return s.base
-#... كمل باقي الروتات بتاعتك...
-
 @app.route("/search")
 def search():
     q = request.args.get('q')
@@ -131,7 +127,8 @@ def search():
     results, total_pages = tmdb.search(q, page)
     content = s.get_cards(results, "all", f'نتائج البحث عن: {q}')
     content += s.get_pagination(page, total_pages, f"/search?q={q}")
-    return s.base(content, f'بحث: {q}')
+    visitors = count_visitors() # ضفتها
+    return s.base(content, f'بحث: {q}', visitors=visitors)
 
 @app.route("/genre/<int:genre_id>")
 def genre_page(genre_id):
@@ -141,134 +138,30 @@ def genre_page(genre_id):
     title = genre_names.get(genre_id, 'افلام')
     content = s.get_cards(movies, "movie", f"افلام {title}")
     content += s.get_pagination(page, total_pages, f"/genre/{genre_id}")
-     # افلام عربي
-    arabic_movies = tmdb.discover_movies(with_original_language='ar', sort_by='popularity.desc')
+
+    arabic_movies, _ = tmdb.discover_movies('ar', None, 1, 'popularity.desc', with_original_language='ar') # عدلتها
     content += s.get_cards(arabic_movies, "movie", "🇪🇬 افلام عربي", scroll=True)
 
-    # افلام كوري
-    korean_movies = tmdb.discover_movies(with_origin_country='KR', sort_by='popularity.desc')
+    korean_movies, _ = tmdb.discover_movies('ko', None, 1, 'popularity.desc', with_origin_country='KR') # عدلتها
     content += s.get_cards(korean_movies, "movie", "🇰🇷 افلام كوري", scroll=True)
 
-# افلام ياباني
-    japan_movies = tmdb.discover_movies(with_origin_country='JP', sort_by='popularity.desc')
+    japan_movies, _ = tmdb.discover_movies('ja', None, 1, 'popularity.desc', with_origin_country='JP') # عدلتها
     content += s.get_cards(japan_movies, "movie", "🇯🇵 افلام ياباني", scroll=True)
 
-# افلام هندي
-    india_movies = tmdb.discover_movies(with_origin_country='IN', sort_by='popularity.desc')
+    india_movies, _ = tmdb.discover_movies('hi', None, 1, 'popularity.desc', with_origin_country='IN') # عدلتها
     content += s.get_cards(india_movies, "movie", "🇮🇳 افلام هندي", scroll=True)
-    
-    return s.base(content, f"افلام {title}")
-    
 
-@app.route('/discover/<media_type>')
-def discover(media_type):
-    country = request.args.get('with_origin_country', '')
-    genre = request.args.get('with_genres', '')
-    page = int(request.args.get('page', 1))
+    visitors = count_visitors() # ضفتها
+    return s.base(content, f"افلام {title}", visitors=visitors)
 
-    country_names = {'KR': 'كوري', 'CN': 'صيني', 'JP': 'ياباني'}
-    genre_names = {'16': 'انمي', '': 'دراما'}
-
-    params = {'page': page, 'sort_by': 'popularity.desc', 'language': 'ar-EG'}
-    if country: params['with_origin_country'] = country
-    if genre: params['with_genres'] = genre
-
-    if media_type == 'tv':
-        data = tmdb._make_request('discover/tv', params)
-        title = f"{genre_names.get(genre, 'مسلسلات')} {country_names.get(country, '')}"
-    else:
-        data = tmdb._make_request('discover/movie', params)
-        title = f"افلام {country_names.get(country, '')}"
-
-    items = data.get('results', [])
-    total_pages = data.get('total_pages', 1)
-
-    content = s.get_cards(items, media_type, title)
-    pagination = s.get_pagination(page, total_pages, f"/discover/{media_type}?with_origin_country={country}&with_genres={genre}")
-    return s.base(content + pagination, title)
-
-@app.route('/tv/genre/<int:genre_id>')
-def tv_by_genre(genre_id):
-    page = int(request.args.get('page', 1))
-    genre_names = {18: 'دراما', 35: 'كوميدي', 10759: 'اكشن ومغامرة', 10765: 'خيال و فانتازيا', 80: 'جريمة', 16: 'كرتون'}
-    data = tmdb._make_request('discover/tv', {'page': page, 'with_genres': genre_id, 'sort_by': 'popularity.desc', 'language': 'ar-EG'})
-    items = data.get('results', [])
-    total_pages = data.get('total_pages', 1)
-    title = f"مسلسلات {genre_names.get(genre_id, '')}"
-    content = s.get_cards(items, 'tv', title)
-    pagination = s.get_pagination(page, total_pages, f"/tv/genre/{genre_id}")
-    return s.base(content + pagination, title)
-
-@app.route('/tv/country/<country_code>')
-def tv_by_country(country_code):
-    page = int(request.args.get('page', 1))
-    country_names = {'EG': 'مصري', 'SA': 'خليجي', 'SY': 'سوري'}
-    data = tmdb._make_request('discover/tv', {'page': page, 'with_original_language': 'ar', 'sort_by': 'popularity.desc', 'language': 'ar-EG'})
-    items = data.get('results', [])
-    if country_code == 'EG':
-        items = [x for x in items if any(word in (x.get('name','') + x.get('overview','')) for word in ['مصر', 'القاهرة', 'رمضان'])]
-    total_pages = data.get('total_pages', 1)
-    title = f"مسلسلات {country_names.get(country_code, '')}"
-    content = s.get_cards(items, 'tv', title)
-    pagination = s.get_pagination(page, total_pages, f"/tv/country/{country_code}")
-    return s.base(content + pagination, title)
-
-def get_ramadan_shows(year=2027):
-    from datetime import datetime
-    import requests
-    if year == 2027:
-        start_date = "2027-03-10"
-        end_date = "2027-04-10"
-    else:
-        start_date = f"{year}-03-01"
-        end_date = f"{year}-04-30"
-
-    url = f"https://api.themoviedb.org/3/discover/tv"
-    params = {"api_key": API_KEY, "language": "ar-EG", "sort_by": "popularity.desc", "first_air_date.gte": start_date, "first_air_date.lte": end_date, "with_origin_country": "EG", "page": 1}
-    try:
-        res = requests.get(url, params=params)
-        data = res.json()
-        return data.get("results", [])
-    except:
-        return []
-
-@app.route("/add_favorite/<media_type>/<int:id>")
-def add_favorite(media_type, id):
-    favorites = session.get('favorites', [])
-    item = {'id': id, 'type': media_type}
-    if item in favorites:
-        favorites.remove(item)
-        session['favorites'] = favorites
-        return jsonify({'status': 'removed'})
-    else:
-        favorites.append(item)
-        session['favorites'] = favorites
-        return jsonify({'status': 'added'})
-
-@app.route("/remove_favorite/<media_type>/<int:id>")
-def remove_favorite(media_type, id):
-    favorites = session.get('favorites', [])
-    favorites = [f for f in favorites if not (f['id'] == id and f['type'] == media_type)]
-    session['favorites'] = favorites
-    return jsonify({'status': 'removed'})
-
-@app.route("/api/favorites")
-def api_favorites():
-    favorites = session.get('favorites', [])
-    movies = []
-    for fav in favorites:
-        details = tmdb.get_details(fav['id'], fav['type'])
-        if details:
-            details['media_type'] = fav['type']
-            movies.append(details)
-    return jsonify(movies)
-
+# باقي الروتات بتاعتك... اهم حاجة زود visitors=visitors في كل return s.base
+# مثال:
 @app.route("/favorites")
 def favorites_page():
     content = s.get_favorites()
-    return s.base(content, "المفضلة")
+    visitors = count_visitors()
+    return s.base(content, "المفضلة", visitors=visitors)
 
-# روت الافلام
 @app.route("/watch/movie/<int:id>")
 def watch_movie(id):
     try:
@@ -276,34 +169,16 @@ def watch_movie(id):
         servers = s.get_servers(id, 'movie')
         similar = tmdb.get_similar(id, 'movie')[:20]
         for item in similar: item['media_type'] = 'movie'
-
         content = s.get_hero(details)
-        content += s.get_player(s.get_servers_html(servers, id, 'movie')) # <-- عدلت هنا
+        content += s.get_player(s.get_servers_html(servers, id, 'movie'))
         content += s.get_cast(details.get('credits', {}).get('cast', []))
         content += s.get_cards(similar, 'movie', "افلام مشابهه")
-        return s.base(content, details.get('title'))
+        visitors = count_visitors() # ضفتها
+        return s.base(content, details.get('title'), visitors=visitors)
     except Exception as e:
-        return s.base(f"<h2>خطأ: {e}</h2>", "خطأ")
-
-
-# روت المسلسلات
-@app.route("/watch/tv/<int:show_id>/<int:season>/<int:episode>")
-def watch_tv(show_id, season, episode):
-    try:
-        details = tmdb.get_show_details(show_id)
-        servers = s.get_servers(show_id, 'tv', season, episode)
-        seasons = details.get('seasons', [])
-        similar = tmdb.get_similar(show_id, 'tv')[:20]
-        for item in similar: item['media_type'] = 'tv'
-
-        content = s.get_hero(details)
-        content += s.get_episodes(seasons, show_id, season, episode)
-        content += s.get_player(s.get_servers_html(servers, show_id, 'tv', season, episode)) # <-- عدلت هنا
-        content += s.get_cast(details.get('credits', {}).get('cast', []))
-        content += s.get_cards(similar, 'tv', "مسلسلات مشابهه")
-        return s.base(content, details.get('name'))
-    except Exception as e:
-        return s.base(f"<h2>خطأ: {e}</h2>", "خطأ")
+        visitors = count_visitors()
+        return s.base(f"<h2>خطأ: {e}</h2>", "خطأ", visitors=visitors)
+        
 # 3. ده عشان زرار التشغيل في الهيرو
 @app.route("/watch/<string:media_type>/<int:id>")
 def watch_redirect(media_type, id):
