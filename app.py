@@ -117,9 +117,38 @@ def privacy():
 def trending_page():
     page = request.args.get('page', 1, type=int)
     results, total_pages = tmdb.get_trending(page=page)
-    content = s.get_cards(results, 'all', '🔥 الأكثر رواجاً', scroll=False)
+    content = s.get_cards(results, 'all', '🔥 الاكثر رواجاً', scroll=False)
     pagination = s.get_pagination(page, total_pages, '/trending')
-    return s.base(content + pagination, 'الأكثر رواجاً')
+    return s.base(content + pagination, "الاكثر رواجاً")
+
+@app.route('/')
+def home_page():
+    # 10 افلام نثبتهم بال ID بتاع TMDB
+    featured_ids = [
+        533535,  # Deadpool & Wolverine
+        1022796, # Inside Out 2  
+        519182,  # Despicable Me 4
+        573435,  # Bad Boys: Ride or Die
+        614479,  # Kingdom of the Planet of the Apes
+        945961,  # A Quiet Place: Day One
+        1023545, # Twisters
+        1300848, # المشروع X
+        1300849, # ولاد رزق 3
+        1300850, # اللعب مع العيال
+    ]
+    
+    results = []
+    for movie_id in featured_ids:
+        movie = tmdb.get_movie_details(movie_id)
+        if movie:
+            results.append(movie)
+    
+    content = s.get_cards(results, 'movie', '🔥 افلام اليوم', scroll=False)
+    trending_link = '<div style="text-align:center; margin:20px;"><a href="/trending" class="btn">عرض المزيد</a></div>'
+    
+    return s.base(content + trending_link, "داخلين سينما")
+
+
 
 @app.route('/top-rated')
 def top_rated_page():
