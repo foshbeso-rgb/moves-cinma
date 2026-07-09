@@ -217,15 +217,19 @@ def discover_tv_page():
         if genre == '16': # انمي كورة
             results, total_pages = tmdb.discover_shows(genre=16, page=page)
             title = "⚽ انمي كورة"
-        elif country == 'KR': # كوري
+            
+        elif country == 'KR': # كوري - هنا التعديل
             results, total_pages = tmdb.discover_shows(page=page)
+            # فلتر المسلسلات اللي فيها كوريا في origin_country
+            results = [r for r in results if 'KR' in r.get('origin_country', [])]
             title = "🇰🇷 مسلسلات كوري"
+            
         else:
             results, total_pages = tmdb.discover_shows(page=page)
             title = "مسلسلات"
         
         content = s.get_cards(results, "tv", title, scroll=False)
-        content += s.get_pagination(page, total_pages, f"/discover/tv?with_origin_country={country}&with_genres={genre}")
+        content += s.get_pagination(page, 10, f"/discover/tv?with_origin_country={country}&with_genres={genre}") # خليت total_pages = 10 عشان الفلتر
         return s.base(content, title, visitors=s.count_visitors())
     except Exception as e:
         return f"Error: {e}"
