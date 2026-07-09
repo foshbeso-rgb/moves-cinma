@@ -364,9 +364,11 @@ def get_player(servers_html):
     .server-btn.active button{{ background:#E50914 !important; }}
     </style>
     ''')
-
 def get_servers_html(servers):
-    return ''.join([f'<button class="btn" onclick="window.location.href=\'{s}\'">{name}</button>' for name, s in servers])
+    buttons = ''
+    for name, s in servers:
+        buttons += f'<button class="btn server-btn" onclick="loadServer(\'{s}\', this)">{name}</button>'
+    return Markup(buttons)
 
 def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
