@@ -2,6 +2,22 @@ from flask import url_for
 from s import get_servers, get_servers_html
 from markupsafe import Markup
 import tmdb
+import os
+
+def count_visitors():
+    # لو الملف مش موجود اعمله واكتب فيه 0
+    if not os.path.exists('visitors.txt'):
+        open('visitors.txt', 'w').write('0')
+    
+    # اقرا الرقم الحالي
+    count = int(open('visitors.txt', 'r').read())
+    
+    # زود 1 واحفظه
+    count += 1
+    open('visitors.txt', 'w').write(str(count))
+    
+    return count
+
 
 def footer():
     return Markup("""
@@ -396,6 +412,7 @@ def get_servers(id, media_type, season=1, episode=1):
             ('▶️ سيرفر 3 - VidLink', f'https://vidlink.pro/movie/{id}'),
             ('▶️ سيرفر 4 - AutoEmbed', f'https://autoembed.co/movie/tmdb/{id}'),
             ('▶️ سيرفر 5 - MoviesAPI', f'https://moviesapi.club/movie/{id}'),
+            ('▶️ سيرفر 2 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/movie/{id}/ar'),
         ]
     else:
         return [
@@ -404,6 +421,7 @@ def get_servers(id, media_type, season=1, episode=1):
             ('▶️ سيرفر 3 - VidLink', f'https://vidlink.pro/tv/{id}/{season}/{episode}'),
             ('▶️ سيرفر 4 - AutoEmbed', f'https://autoembed.co/tv/tmdb/{id}/{season}/{episode}'),
             ('▶️ سيرفر 5 - MoviesAPI', f'https://moviesapi.club/tv/{id}-{season}-{episode}'),
+            ('▶️ سيرفر 2 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/tv/{id}/{season}/{episode}/ar'),
         ]
 
         
