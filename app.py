@@ -153,16 +153,13 @@ def home_page():
     return s.base(content + trending_link, "داخلين سينما")
 
 
-@app.route('/top_rated')
+@app.route('/top-rated')
 def top_rated_page():
-    data = tmdb._make_request('movie/top_rated', {'page': 1}) # ده بيجيب الاعلى تقييما من TMDB
-    results = data.get('results', [])
-    results = [m for m in results if m.get('poster_path')] # نشيل الفاضي
-    
-    content = s.get_cards(results, 'movie', '⭐ الاعلى تقييماً', scroll=False) # شبكة
-    content += s.get_pagination(1, data.get('total_pages', 1), '/top_rated')
-    
-    return s.base(content, "⭐ الاعلى تقييماً")
+    page = request.args.get('page', 1, type=int)
+    results, total_pages = tmdb.get_top_rated(page=page)
+    content = s.get_cards(results, 'all', '⭐ الأعلى تقييماً', scroll=False)
+    pagination = s.get_pagination(page, total_pages, '/top-rated')
+    return s.base(content + pagination, 'الأعلى تقييماً')
 
 @app.route('/upcoming')
 def upcoming_page():
