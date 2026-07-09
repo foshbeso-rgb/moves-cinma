@@ -335,13 +335,13 @@ def get_cards(items, media_type, title, scroll=True):
         more_link = "/top-rated"
     elif title == "🎬 قريبا في السينما": 
         more_link = "/upcoming"
-    elif title == "⚽ انمي كورة": 
+    elif title == "انمى ": 
         more_link = "/discover/tv?with_genres=16"
     elif title == "🔥 الاكثر رواجاً":
         more_link = "/trending"
     elif title == "🇪🇬 افلام عربي":
-        more_link = "/discover/movie?with_original_language=ar"
-    elif title == "🇰🇷 مسلسلات كوري":
+        more_link = "/discover/tv?language=ko"
+       elif title == "🇰🇷 مسلسلات كوري":
         more_link = "/discover/tv?with_origin_country=KR"
     elif title == "🇺🇸 افلام اكشن امريكي":
         more_link = "/genre/28"
