@@ -316,6 +316,11 @@ def watch_redirect(media_type, id):
     else:
         return redirect(f"/watch/movie/{id}")
 
+@app.route('/robots.txt')
+@app.route('/sitemap.xml')
+def static_files():
+    return send_from_directory(os.getcwd(), request.path[1:])
+
 
 
 if __name__ == "__main__":
