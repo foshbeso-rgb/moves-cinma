@@ -54,14 +54,18 @@ def index():
     us_action, _ = tmdb.discover_movies('en', 28, 1, 'popularity.desc', with_origin_country='US'); us_action = us_action[:20]
     us_comedy, _ = tmdb.discover_movies('en', 35, 1, 'popularity.desc', with_origin_country='US'); us_comedy = us_comedy[:20]
 
-    # 1. غيرت الترتيب هنا عشان تجيب 20 فيلم عربي احدث
+    # افلام
     arabic_movies, _ = tmdb.discover_movies('ar', None, 1, 'release_date.desc', with_original_language='ar'); arabic_movies = arabic_movies[:20]
 
+    # مسلسلات
     us_drama_shows, _ = tmdb.discover_shows('en', 18); us_drama_shows = us_drama_shows[:20]
     k_drama, _ = tmdb.get_popular_by_lang('ko', 'tv'); k_drama = k_drama[:20]
 
-    # 2. ضفت الصيني هنا
-    c_drama, _ = tmdb.discover_shows('zh', None, 1); c_drama = c_drama[:20]
+    # الجديد كله هنا 👇
+    c_drama, _ = tmdb.discover_shows('zh', None, 1); c_drama = c_drama[:20] # صيني
+    jp_drama, _ = tmdb.discover_shows('ja', None, 1); jp_drama = jp_drama[:20] # ياباني
+    tr_drama, _ = tmdb.discover_shows('tr', None, 1); tr_drama = tr_drama[:20] # تركي
+    ar_shows, _ = tmdb.discover_shows('ar', None, 1); ar_shows = ar_shows[:20] # عربي/مصري
 
     hero = s.get_hero(trending[0] if trending else None)
     content = hero
@@ -69,15 +73,19 @@ def index():
     content += s.get_cards(trending, "all", "🔥 الاكثر رواجاً", scroll=True)
     content += s.get_cards(top_rated_movies, "movie", "⭐ الاعلى تقييماً", scroll=True)
     content += s.get_cards(upcoming, "movie", "🎬 قريبا في السينما", scroll=True)
+
     content += s.get_cards(soccer_anime, "tv", "⚽ انمي كورة", scroll=True)
     content += s.get_cards(us_action, "movie", "🇺🇸 افلام اكشن امريكي", scroll=True)
     content += s.get_cards(us_comedy, "movie", "🇺🇸 افلام كوميدي امريكي", scroll=True)
     content += s.get_cards(arabic_movies, "movie", "🇪🇬 افلام عربي", scroll=True)
+
+    # كل اقسام المسلسلات
     content += s.get_cards(us_drama_shows, "tv", "🇺🇸 مسلسلات دراما امريكي", scroll=True)
     content += s.get_cards(k_drama, "tv", "🇰🇷 مسلسلات كوري", scroll=True)
-
-    # 3. ضفت كارت الصيني هنا
     content += s.get_cards(c_drama, "tv", "🇨🇳 مسلسلات صيني", scroll=True)
+    content += s.get_cards(jp_drama, "tv", "🇯🇵 مسلسلات ياباني", scroll=True)
+    content += s.get_cards(tr_drama, "tv", "🇹🇷 مسلسلات تركي", scroll=True)
+    content += s.get_cards(ar_shows, "tv", "🇪🇬 مسلسلات عربي", scroll=True)
 
     visitors = count_visitors()
     return s.base(content, "الرئيسية", visitors=visitors)
