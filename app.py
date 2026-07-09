@@ -8,12 +8,22 @@ import sections as s
 import requests
 import config
 
-template_dir = os.path.dirname(os.path.abspath(__file__))
+template_dir = os.path.dirname(os.path.abspath(__file__)) # 1. لازم يبقى فوق
 app = Flask(__name__, template_folder=os.path.join(template_dir, 'templates'), static_folder='static')
 app.secret_key = os.environ.get('SECRET_KEY', 'dakhlin_secret_key_123')
 
 BASE_URL = "https://api.themoviedb.org/3"
 API_KEY = os.environ.get('TMDB_API_KEY')
+
+# 2. دالة العداد
+def count_visitors():
+    file_path = os.path.join(template_dir, 'visitors.txt')
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as f: f.write('0')
+    with open(file_path, 'r') as f: count = int(f.read())
+    count += 1
+    with open(file_path, 'w') as f: f.write(str(count))
+    return count
 
 @app.route('/googleccfb7f75048a906c.html')
 def google_verify():
@@ -27,6 +37,40 @@ def index():
 
     top_rated_movies, _ = tmdb.discover_movies('en', None, 1, 'vote_average.desc')
     top_rated_movies = top_rated_movies[:20]
+
+    upcoming, _ = tmdb.get_upcoming()
+    upcoming = upcoming[:20]
+
+    anime, _ = tmdb.discover_shows('ja', 16)
+    anime = anime[:15]
+    soccer_anime = [x for x in anime if 'كورة' in x.get('name','') or 'football' in x.get('name','').lower() or 'captain' in x.get('name','').lower()][:20]
+    if not soccer_anime:
+        soccer_anime = [x for x in anime if 16 in x.get('genre_ids', [])][:20]
+
+    us_action, _ = tmdb.discover_movies('en', 28); us_action = us_action[:20]
+    us_comedy, _ = tmdb.discover_movies('en', 35); us_comedy = us_comedy[:20]
+    arabic_movies, _ = tmdb.discover_movies('ar'); arabic_movies = arabic_movies[:20]
+    us_drama_shows, _ = tmdb.discover_shows('en', 18); us_drama_shows = us_drama_shows[:20]
+    k_drama, _ = tmdb.get_popular_by_lang('ko', 'tv'); k_drama = k_drama[:20]
+
+    hero = s.get_hero(trending[0] if trending else None)
+    content = hero
+
+    content += s.get_cards(trending, "all", "🔥 الاكثر رواجاً", scroll=True)
+    content += s.get_cards(top_rated_movies, "movie", "⭐ الاعلى تقييماً", scroll=True)
+    content += s.get_cards(upcoming, "movie", "🎬 قريبا في السينما", scroll=True)
+    content += s.get_cards(soccer_anime, "tv", "⚽ انمي كورة", scroll=True)
+    content += s.get_cards(us_action, "movie", "🇺🇸 افلام اكشن امريكي", scroll=True)
+    content += s.get_cards(us_comedy, "movie", "🇺🇸 افلام كوميدي امريكي", scroll=True)
+    content += s.get_cards(arabic_movies, "movie", "🇪🇬 افلام عربي", scroll=True)
+    content += s.get_cards(us_drama_shows, "tv", "🇺🇸 مسلسلات دراما امريكي", scroll=True)
+    content += s.get_cards(k_drama, "tv", "🇰🇷 مسلسلات كوري", scroll=True)
+
+    visitors = count_visitors() # 3. نعد الزوار
+
+    return s.base(content, "الرئيسية", visitors=visitors) # 4. نبعت العدد
+
+# امسح فانكشن home_page كلها عشان عاملة تعارض
 
     upcoming, _ = tmdb.get_upcoming()
     upcoming = upcoming[:20]
