@@ -374,23 +374,18 @@ def get_player(servers_html):
 def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
         return [
-            ('▶️ سيرفر 1 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
-            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 3 - MoviesAPI', f'https://moviesapi.club/movie/{id}&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 4 - VidCloud', f'https://vidcloud.icu/embed/movie/{id}'),  # جديد 1
-            ('▶️ سيرفر 5 - Smashy', f'https://smashy.stream/embed/movie/{id}'),    # جديد 2
+            ('▶️ سيرفر 1 - VidSrc.to', f'https://vidsrc.to/embed/movie/{id}'), # ده افضل واحد
+            ('▶️ سيرفر 2 - VidSrc.xyz', f'https://vidsrc.xyz/embed/movie/{id}'), # ده التاني
+            ('▶️ سيرفر 3 - MultiEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar'),
             ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/movie/{id}')
         ]
     else:
         return [
-            ('▶️ سيرفر 1 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
-            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 3 - MoviesAPI', f'https://moviesapi.club/serie/{id}/{season}/{episode}&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 4 - VidCloud', f'https://vidcloud.icu/embed/tv/{id}/{season}/{episode}'),  # جديد 1
-            ('▶️ سيرفر 5 - Smashy', f'https://smashy.stream/embed/tv/{id}/{season}/{episode}'),    # جديد 2
+            ('▶️ سيرفر 1 - VidSrc.to', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
+            ('▶️ سيرفر 2 - VidSrc.xyz', f'https://vidsrc.xyz/embed/tv/{id}/{season}-{episode}'),
+            ('▶️ سيرفر 3 - MultiEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar'),
             ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/tv/{id}')
         ]
-
 
 def get_servers_html(servers, id, media_type, season=1, episode=1):
     html = ''
