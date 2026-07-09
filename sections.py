@@ -373,28 +373,34 @@ def get_player(servers_html):
     }}
     </script>
     <style>
-    .server-btn {{
-        padding:10px 15px; background:#222; color:#fff; border:none; 
-        border-radius:6px; cursor:pointer; font-weight:bold;
-    }}
-    .server-btn.active {{ background:#E50914 !important; }}
-    .server-btn:hover {{ background:#333; }}
-    .player{{position:relative;}}
-    </style>
+.server-btn {
+    padding:10px 15px; background:#222; color:#fff; border:none; 
+    border-radius:6px; cursor:pointer; font-weight:bold;
+}
+.server-btn.active { background:#E50914 !important; }
+.server-btn:hover { background:#333; }
+.player{position:relative;}
+
+/* ده الجديد عشان الفيديو يملا الشاشة */
+#player-frame {
+    width: 100%;
+    height: 80vh; /* خلي الارتفاع 80% من الشاشة */
+}
+</style>
     ''')
     
 def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
         return [
-            ('▶️ سيرفر 1 - SuperEmbed مترجم', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 2 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
-            ('▶️ سيرفر 3 - Vidsrc.su', f'https://vidsrc.su/embed/movie/{id}/ar'),
+            ('▶️ سيرفر 1 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/movie/{id}/ar'), # خليه الاول
+            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 3 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
         ]
     else:
         return [
-            ('▶️ سيرفر 1 - SuperEmbed مترجم', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 2 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
-            ('▶️ سيرفر 3 - Vidsrc.su', f'https://vidsrc.su/embed/tv/{id}/{season}/{episode}/ar'),
+            ('▶️ سيرفر 1 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/tv/{id}/{season}/{episode}/ar'), # خليه الاول
+            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 3 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
         ]
 
 def get_servers_html(servers, id, media_type, season=1, episode=1):
