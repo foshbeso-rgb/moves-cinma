@@ -211,24 +211,15 @@ def discover_tv_page():
     try:
         genre = request.args.get('with_genres', '')
         country = request.args.get('with_origin_country', '')
+        language = request.args.get('language', 'en') # ضفنا دي
         page = int(request.args.get('page', 1))
         
         if genre == '16': # انمي كورة
             results, total_pages = tmdb.discover_shows(genre=16, page=page)
-            title = "⚽ انمي كورة"
+            title = " انمى "
             
-        elif country == 'KR': # كوري - الحل هنا
-            results = []
-            current_page = 1
-            # هنلف على 5 صفحات لحد ما نجمع 20 مسلسل كوري
-            while len(results) < 20 and current_page <= 5:
-                page_results, _ = tmdb.discover_shows(page=current_page)
-                korean = [r for r in page_results if 'KR' in r.get('origin_country', [])]
-                results.extend(korean)
-                current_page += 1
-            
-            results = results[:20] # خد اول 20 بس
-            total_pages = 10 # خلي فيه تقليب
+        elif language == 'ko': # كوري
+            results, total_pages = tmdb.discover_shows(language='ko', page=page)
             title = "🇰🇷 مسلسلات كوري"
             
         else:
@@ -236,7 +227,9 @@ def discover_tv_page():
             title = "مسلسلات"
         
         content = s.get_cards(results, "tv", title, scroll=False)
-        content += s.get_pagination(page, total_pages, f"/discover/tv?with_origin_country={country}&with_genres={genre}")
+        # مهم: الباجينيشن لازم يحتفظ باللغة
+        pagination_link = f"/discover/tv?language={language}&with_genres={genre}"
+        content += s.get_pagination(page, total_pages, pagination_link)
         return s.base(content, title, visitors=s.count_visitors())
     except Exception as e:
         return f"Error: {e}"
