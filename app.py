@@ -316,37 +316,54 @@ def favorites_page():
 # 1. روت الافلام
 @app.route("/watch/movie/<int:id>")
 def watch_movie(id):
-    details = tmdb.get_movie_details(id)
-    servers = s.get_servers(id, 'movie')
-    similar = tmdb.get_similar(id, 'movie')[:20]
+    try:
+        details = tmdb.get_movie_details(id)
+        if not details:
+            return s.base("<h2 style='text-align:center; padding:100px;'>الفيلم مش موجود</h2>", "خطأ")
+        
+        servers = s.get_servers(id, 'movie')
+        similar = tmdb.get_similar(id, 'movie')[:20]
+        credits = tmdb.get_credits(id, 'movie') # <-- ده الناقص
 
-    for item in similar:
-        item['media_type'] = 'movie'
+        for item in similar:
+            item['media_type'] = 'movie'
 
-    content = s.get_hero(details)
-    content += s.get_player(s.get_servers_html(servers))
-    content += s.get_cast(details.get('credits', {}).get('cast', []))
-    content += s.get_cards(similar, 'movie', "افلام مشابهه")
-    return s.base(content, details.get('title'))
+        content = s.get_hero(details)
+        content += s.get_player(s.get_servers_html(servers))
+        content += s.get_cast(credits.get('cast', [])) # <-- استخدمنا credits
+        content += s.get_cards(similar, 'movie', "افلام مشابهه")
+        return s.base(content, details.get('title'))
+
+    except Exception as e:
+        print(f"ERROR MOVIE {id}: {e}")
+        return s.base(f"<h2 style='text-align:center; padding:100px;'>خطأ: {e}</h2>", "خطأ")
 
 # 2. روت المسلسلات
 @app.route("/watch/tv/<int:show_id>/<int:season>/<int:episode>")
 def watch_tv(show_id, season, episode):
-    details = tmdb.get_show_details(show_id)
-    servers = s.get_servers(show_id, 'tv', season, episode)
-    seasons = details.get('seasons', [])
-    similar = tmdb.get_similar(show_id, 'tv')[:20]
+    try:
+        details = tmdb.get_show_details(show_id)
+        if not details:
+            return s.base("<h2 style='text-align:center; padding:100px;'>المسلسل مش موجود</h2>", "خطأ")
 
-    for item in similar:
-        item['media_type'] = 'tv'
+        servers = s.get_servers(show_id, 'tv', season, episode)
+        seasons = details.get('seasons', [])
+        similar = tmdb.get_similar(show_id, 'tv')[:20]
+        credits = tmdb.get_credits(show_id, 'tv') # <-- ده الناقص
 
-    content = s.get_hero(details)
-    content += s.get_episodes(seasons, show_id, season, episode)
-    content += s.get_player(s.get_servers_html(servers))
-    content += s.get_cast(details.get('credits', {}).get('cast', []))
-    content += s.get_cards(similar, 'tv', "مسلسلات مشابهه")
-    return s.base(content, details.get('name'))
+        for item in similar:
+            item['media_type'] = 'tv'
 
+        content = s.get_hero(details)
+        content += s.get_episodes(seasons, show_id, season, episode)
+        content += s.get_player(s.get_servers_html(servers))
+        content += s.get_cast(credits.get('cast', [])) # <-- استخدمنا credits
+        content += s.get_cards(similar, 'tv', "مسلسلات مشابهه")
+        return s.base(content, details.get('name'))
+
+    except Exception as e:
+        print(f"ERROR TV {show_id}: {e}")
+        return s.base(f"<h2 style='text-align:center; padding:100px;'>خطأ: {e}</h2>", "خطأ")
 # 3. ده عشان زرار التشغيل في الهيرو
 @app.route("/watch/<string:media_type>/<int:id>")
 def watch_redirect(media_type, id):
