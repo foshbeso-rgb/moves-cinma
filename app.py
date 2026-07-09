@@ -51,7 +51,6 @@ def index():
     if not soccer_anime:
         soccer_anime = [x for x in anime if 16 in x.get('genre_ids', [])][:20]
 
-    # التعديل هنا 👇 ضفنا with_origin_country و with_original_language
     us_action, _ = tmdb.discover_movies('en', 28, 1, 'popularity.desc', with_origin_country='US'); us_action = us_action[:20]
     us_comedy, _ = tmdb.discover_movies('en', 35, 1, 'popularity.desc', with_origin_country='US'); us_comedy = us_comedy[:20]
     arabic_movies, _ = tmdb.discover_movies('ar', None, 1, 'popularity.desc', with_original_language='ar'); arabic_movies = arabic_movies[:20]
@@ -77,19 +76,19 @@ def index():
 
 @app.route('/about')
 def about():
-    content = Markup(f"""... كودك زي ما هو... """)
+    content = Markup(f"""<div class="container mt-4"><h1>من نحن</h1><p>مرحبا بكم في موقعنا</p></div>""")
     visitors = count_visitors()
     return s.base(content, "من نحن", visitors=visitors)
 
 @app.route('/contact')
 def contact():
-    content = Markup(f"""... كودك زي ما هو... """)
+    content = Markup(f"""<div class="container mt-4"><h1>اتصل بنا</h1><p>للتواصل معنا</p></div>""")
     visitors = count_visitors()
     return s.base(content, "اتصل بنا", visitors=visitors)
 
 @app.route('/privacy')
 def privacy():
-    content = Markup(f"""... كودك زي ما هو... """)
+    content = Markup(f"""<div class="container mt-4"><h1>سياسة الخصوصية</h1><p>نحترم خصوصيتك</p></div>""")
     visitors = count_visitors()
     return s.base(content, "سياسة الخصوصية", visitors=visitors)
 
@@ -127,7 +126,7 @@ def search():
     results, total_pages = tmdb.search(q, page)
     content = s.get_cards(results, "all", f'نتائج البحث عن: {q}')
     content += s.get_pagination(page, total_pages, f"/search?q={q}")
-    visitors = count_visitors() # ضفتها
+    visitors = count_visitors()
     return s.base(content, f'بحث: {q}', visitors=visitors)
 
 @app.route("/genre/<int:genre_id>")
@@ -139,23 +138,21 @@ def genre_page(genre_id):
     content = s.get_cards(movies, "movie", f"افلام {title}")
     content += s.get_pagination(page, total_pages, f"/genre/{genre_id}")
 
-    arabic_movies, _ = tmdb.discover_movies('ar', None, 1, 'popularity.desc', with_original_language='ar') # عدلتها
+    arabic_movies, _ = tmdb.discover_movies('ar', None, 1, 'popularity.desc', with_original_language='ar')
     content += s.get_cards(arabic_movies, "movie", "🇪🇬 افلام عربي", scroll=True)
 
-    korean_movies, _ = tmdb.discover_movies('ko', None, 1, 'popularity.desc', with_origin_country='KR') # عدلتها
+    korean_movies, _ = tmdb.discover_movies('ko', None, 1, 'popularity.desc', with_origin_country='KR')
     content += s.get_cards(korean_movies, "movie", "🇰🇷 افلام كوري", scroll=True)
 
-    japan_movies, _ = tmdb.discover_movies('ja', None, 1, 'popularity.desc', with_origin_country='JP') # عدلتها
+    japan_movies, _ = tmdb.discover_movies('ja', None, 1, 'popularity.desc', with_origin_country='JP')
     content += s.get_cards(japan_movies, "movie", "🇯🇵 افلام ياباني", scroll=True)
 
-    india_movies, _ = tmdb.discover_movies('hi', None, 1, 'popularity.desc', with_origin_country='IN') # عدلتها
+    india_movies, _ = tmdb.discover_movies('hi', None, 1, 'popularity.desc', with_origin_country='IN')
     content += s.get_cards(india_movies, "movie", "🇮🇳 افلام هندي", scroll=True)
 
-    visitors = count_visitors() # ضفتها
+    visitors = count_visitors()
     return s.base(content, f"افلام {title}", visitors=visitors)
 
-# باقي الروتات بتاعتك... اهم حاجة زود visitors=visitors في كل return s.base
-# مثال:
 @app.route("/favorites")
 def favorites_page():
     content = s.get_favorites()
@@ -173,13 +170,35 @@ def watch_movie(id):
         content += s.get_player(s.get_servers_html(servers, id, 'movie'))
         content += s.get_cast(details.get('credits', {}).get('cast', []))
         content += s.get_cards(similar, 'movie', "افلام مشابهه")
-        visitors = count_visitors() # ضفتها
+        visitors = count_visitors()
         return s.base(content, details.get('title'), visitors=visitors)
     except Exception as e:
         visitors = count_visitors()
         return s.base(f"<h2>خطأ: {e}</h2>", "خطأ", visitors=visitors)
-        
-# 3. ده عشان زرار التشغيل في الهيرو
+
+# ده الروت الناقص بتاع المسلسلات
+@app.route("/watch/tv/<int:id>/<int:season>/<int:episode>")
+def watch_tv(id, season, episode):
+    try:
+        details = tmdb.get_show_details(id)
+        seasons = details.get('seasons', [])
+        servers = s.get_servers(id, 'tv', season, episode)
+        similar = tmdb.get_similar(id, 'tv')[:20]
+        for item in similar: item['media_type'] = 'tv'
+
+        content = s.get_hero(details)
+        content += s.get_player(s.get_servers_html(servers, id, 'tv', season, episode))
+        content += s.get_episodes(seasons, id, season, episode)
+        content += s.get_cast(details.get('credits', {}).get('cast', []))
+        content += s.get_cards(similar, 'tv', "مسلسلات مشابهه")
+
+        visitors = count_visitors()
+        return s.base(content, details.get('name'), visitors=visitors)
+
+    except Exception as e:
+        visitors = count_visitors()
+        return s.base(f"<h2>خطأ: {e}</h2><p>{request.url}</p>", "خطأ", visitors=visitors)
+
 @app.route("/watch/<string:media_type>/<int:id>")
 def watch_redirect(media_type, id):
     if media_type == 'tv':
@@ -198,13 +217,15 @@ def discover_movies_page():
         lang = request.args.get('with_original_language', 'ar')
         page = int(request.args.get('page', 1))
         results, total_pages = tmdb.discover_movies(with_original_language=lang, page=page)
-        
+
         title = "🇪🇬 افلام عربي" if lang == 'ar' else "افلام"
         content = s.get_cards(results, "movie", title, scroll=False)
         content += s.get_pagination(page, total_pages, f"/discover/movie?with_original_language={lang}")
-        return s.base(content, title, visitors=s.count_visitors())
+        visitors = count_visitors()
+        return s.base(content, title, visitors=visitors)
     except Exception as e:
-        return f"Error: {e}"
+        visitors = count_visitors()
+        return s.base(f"Error: {e}", "خطأ", visitors=visitors)
 
 @app.route("/discover/tv")
 def discover_tv_page():
@@ -212,28 +233,30 @@ def discover_tv_page():
         genre = request.args.get('with_genres', '')
         language = request.args.get('language', '')
         page = int(request.args.get('page', 1))
-        
-        if genre == '16': # انمي كورة
+
+        if genre == '16':
             results, total_pages = tmdb.discover_shows(genre=16, language='ja', page=page)
             title = "⚽ انمي كورة"
             pagination_link = f"/discover/tv?with_genres=16"
-            
-        elif language == 'ko': # كوري
+
+        elif language == 'ko':
             results, total_pages = tmdb.discover_shows(language='ko', page=page)
             title = "🇰🇷 مسلسلات كوري"
             pagination_link = f"/discover/tv?language=ko"
-            
-        else: # الافتراضي اجنبي
+
+        else:
             results, total_pages = tmdb.discover_shows(language='en', page=page)
             title = "🇺🇸 مسلسلات اجنبي"
             pagination_link = f"/discover/tv"
-        
+
         content = s.get_cards(results, "tv", title, scroll=False)
         content += s.get_pagination(page, total_pages, pagination_link)
-        return s.base(content, title, visitors=0) # شلت count_visitors
-        
+        visitors = count_visitors()
+        return s.base(content, title, visitors=visitors)
+
     except Exception as e:
-        return f"<h1>Error</h1><p>{e}</p><p>URL: {request.url}</p>"
+        visitors = count_visitors()
+        return s.base(f"<h1>Error</h1><p>{e}</p><p>URL: {request.url}</p>", "خطأ", visitors=visitors)
 
 @app.route("/tv/genre/<int:genre_id>")
 def tv_genre_page(genre_id):
@@ -242,20 +265,11 @@ def tv_genre_page(genre_id):
         results, total_pages = tmdb.discover_shows(genre=genre_id, page=page)
         content = s.get_cards(results, "tv", "🇺🇸 مسلسلات دراما امريكي", scroll=False)
         content += s.get_pagination(page, total_pages, f"/tv/genre/{genre_id}")
-        return s.base(content, "مسلسلات دراما امريكي", visitors=s.count_visitors())
+        visitors = count_visitors()
+        return s.base(content, "مسلسلات دراما امريكي", visitors=visitors)
     except Exception as e:
-        return f"Error: {e}"
+        visitors = count_visitors()
+        return s.base(f"Error: {e}", "خطأ", visitors=visitors)
 
-
-@app.route("/genre/<int:genre_id>")
-def movie_genre_page(genre_id):
-    try:
-        page = int(request.args.get('page', 1))
-        results, total_pages = tmdb.discover_movies(genre=genre_id, page=page)
-        content = s.get_cards(results, "movie", "افلام", scroll=False)
-        content += s.get_pagination(page, total_pages, f"/genre/{genre_id}")
-        return s.base(content, "افلام", visitors=s.count_visitors())
-    except Exception as e:
-        return f"Error: {e}"
-
-
+if __name__ == '__main__':
+    app.run(debug=True)
