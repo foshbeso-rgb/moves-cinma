@@ -53,10 +53,15 @@ def index():
 
     us_action, _ = tmdb.discover_movies('en', 28, 1, 'popularity.desc', with_origin_country='US'); us_action = us_action[:20]
     us_comedy, _ = tmdb.discover_movies('en', 35, 1, 'popularity.desc', with_origin_country='US'); us_comedy = us_comedy[:20]
-    arabic_movies, _ = tmdb.discover_movies('ar', None, 1, 'popularity.desc', with_original_language='ar'); arabic_movies = arabic_movies[:20]
+
+    # 1. غيرت الترتيب هنا عشان تجيب 20 فيلم عربي احدث
+    arabic_movies, _ = tmdb.discover_movies('ar', None, 1, 'release_date.desc', with_original_language='ar'); arabic_movies = arabic_movies[:20]
 
     us_drama_shows, _ = tmdb.discover_shows('en', 18); us_drama_shows = us_drama_shows[:20]
     k_drama, _ = tmdb.get_popular_by_lang('ko', 'tv'); k_drama = k_drama[:20]
+
+    # 2. ضفت الصيني هنا
+    c_drama, _ = tmdb.discover_shows('zh', None, 1); c_drama = c_drama[:20]
 
     hero = s.get_hero(trending[0] if trending else None)
     content = hero
@@ -70,6 +75,9 @@ def index():
     content += s.get_cards(arabic_movies, "movie", "🇪🇬 افلام عربي", scroll=True)
     content += s.get_cards(us_drama_shows, "tv", "🇺🇸 مسلسلات دراما امريكي", scroll=True)
     content += s.get_cards(k_drama, "tv", "🇰🇷 مسلسلات كوري", scroll=True)
+
+    # 3. ضفت كارت الصيني هنا
+    content += s.get_cards(c_drama, "tv", "🇨🇳 مسلسلات صيني", scroll=True)
 
     visitors = count_visitors()
     return s.base(content, "الرئيسية", visitors=visitors)
