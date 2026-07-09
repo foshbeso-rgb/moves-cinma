@@ -341,8 +341,8 @@ def get_cards(items, media_type, title, scroll=True):
         more_link = "/trending"
     elif title == "🇪🇬 افلام عربي":
         more_link = "/discover/tv?language=ko"
-       elif title == "🇰🇷 مسلسلات كوري":
-        more_link = "/discover/tv?with_origin_country=KR"
+     elif title == "🇰🇷 مسلسلات كوري":
+        more_link = "/discover/tv?language=ko"
     elif title == "🇺🇸 افلام اكشن امريكي":
         more_link = "/genre/28"
     elif title == "🇺🇸 افلام كوميدي امريكي":
