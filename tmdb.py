@@ -55,7 +55,6 @@ def discover_shows(language='en', genre=None, page=1, with_origin_country=None):
     params = {'sort_by': 'popularity.desc', 'page': page, 'vote_count.gte': 20}
     if language: params['with_original_language'] = language
     if genre: params['with_genres'] = genre
-    if with_origin_country: params['with_origin_country'] = with_origin_country # ضيف دي
     data = _make_request('discover/tv', params)
     return data.get('results', []), data.get('total_pages', 1)
 
