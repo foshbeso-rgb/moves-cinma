@@ -344,30 +344,28 @@ def get_player(servers_html):
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
             {servers_html}
         </div>
-        <div class="player">
-            <iframe id="player-frame" src="" frameborder="0" allowfullscreen style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
+        <div class="player" style="aspect-ratio: 16/9; margin-top:20px;">
+            <iframe id="player-frame" src="" frameborder="0" allowfullscreen style="width:100%; height:100%; border-radius:8px; background:#000;"></iframe>
         </div>
     </div>
     <script>
     function loadServer(url, btn){{
         document.getElementById('player-frame').src = url;
-        document.querySelectorAll('.server-btn').forEach(b=>b.classList.remove('active'));
-        btn.parentElement.classList.add('active');
+        document.querySelectorAll('.server-btn').forEach(b=>b.style.background = '#333');
         btn.style.background = '#E50914';
+        document.getElementById('player-frame').scrollIntoView({{behavior: "smooth"}});
     }}
-    window.onload = () => {{
-        let firstBtn = document.querySelector('.server-btn button');
+    document.addEventListener('DOMContentLoaded', () => {{
+        let firstBtn = document.querySelector('.server-btn');
         if(firstBtn) firstBtn.click();
-    }}
+    }});
     </script>
-    <style>
-    .server-btn.active button{{ background:#E50914 !important; }}
-    </style>
     ''')
+    
 def get_servers_html(servers):
     buttons = ''
     for name, s in servers:
-        buttons += f'<button class="btn server-btn" onclick="loadServer(\'{s}\', this)">{name}</button>'
+        buttons += f'<button class="btn server-btn" type="button" onclick="loadServer(\'{s}\', this)">{name}</button>'
     return Markup(buttons)
 
 def get_servers(id, media_type, season=1, episode=1):
