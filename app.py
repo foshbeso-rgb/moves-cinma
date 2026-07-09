@@ -10,7 +10,7 @@ app.secret_key = 'dakhlin_secret_key_123'
 
 BASE_URL = "https://api.themoviedb.org/3"
 import os
-API_KEY = os.environ.get('API_KEY')
+    API_KEY = os.environ.get('TMDB_API_KEY')
 
 @app.route("/")
 def index():
