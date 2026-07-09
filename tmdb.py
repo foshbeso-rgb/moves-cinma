@@ -41,20 +41,22 @@ def search(query, page=1):
     return data.get('results', []), data.get('total_pages', 1)
 
 def discover_movies(language='en', genre=None, page=1, sort_by='popularity.desc', with_original_language=None, with_origin_country=None):
-    # المشكلة كانت هنا: vote_count.gte 100 مخلي الافلام العربي 6 بس
-    params = {'sort_by': sort_by, 'page': page, 'vote_count.gte': 5, 'language': 'ar-EG'}
+    params = {'sort_by': sort_by, 'page': page, 'language': 'ar-EG'}
     
-    if language: params['with_original_language'] = language
-    if genre: params['with_genres'] = genre
-    if with_original_language: params['with_original_language'] = with_original_language
-    if with_origin_country: params['with_origin_country'] = with_origin_country
+    if language: 
+        params['with_original_language'] = language
+    if genre: 
+        params['with_genres'] = genre
+    if with_original_language: 
+        params['with_original_language'] = with_original_language
+    if with_origin_country: 
+        params['with_origin_country'] = with_origin_country
     
     data = _make_request('discover/movie', params)
     return data.get('results', []), data.get('total_pages', 1)
 
 def discover_shows(language='en', genre=None, page=1):
-    # خليتها 5 عشان الصيني والكوري يظهرو
-    params = {'sort_by': 'popularity.desc', 'page': page, 'vote_count.gte': 5, 'language': 'ar-EG'}
+    params = {'sort_by': 'popularity.desc', 'page': page, 'language': 'ar-EG'}
     
     if language: 
         params['with_original_language'] = language
