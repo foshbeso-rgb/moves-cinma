@@ -1,0 +1,40 @@
+<footer style="background: #0a0a0a; color: #ccc; padding: 30px 20px; text-align: center; margin-top: 50px; border-top: 1px solid #222;">
+
+    <!-- جمعت كل اللينكات في مكان واحد وزودت سياسة الخصوصية -->
+    <div class="footer-links" style="margin-bottom: 20px;">
+        <a href="{{ url_for('home') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">الرئيسية</a>
+        <a href="{{ url_for('favorites') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">المفضلة</a>
+        <a href="{{ url_for('about') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">من نحن</a>
+        <a href="{{ url_for('privacy') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">سياسة الخصوصية</a>
+        <a href="{{ url_for('contact') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">اتصل بنا</a>
+    </div>
+
+    <!-- ال 3 ايقونات - حط روابطك هنا -->
+    <div class="social-icons" style="margin: 20px 0;">
+        <a href="https://t.me/" target="_blank" style="margin: 0 10px; font-size: 22px; color: #ccc; transition: 0.3s;"><i class="fab fa-telegram"></i></a>
+        <a href="https://facebook.com/" target="_blank" style="margin: 0 10px; font-size: 22px; color: #ccc; transition: 0.3s;"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://twitter.com/" target="_blank" style="margin: 0 10px; font-size: 22px; color: #ccc; transition: 0.3s;"><i class="fab fa-twitter"></i></a>
+        <a href="{{ url_for('index') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">الرئيسية</a>
+        <a href="{{ url_for('favorites_page') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">المفضلة</a>
+        <a href="{{ url_for('about') }}" style="color: #ccc; text-decoration: none; margin: 0 15px; transition: 0.3s;">من نحن</a>
+        
+        <span style="color: #555;">|</span>
+        <a href="/year/2026" style="color: #e50914; text-decoration: none; margin: 0 15px; font-weight: bold;">أفلام 2026</a>
+        <a href="/year/2025" style="color: #e50914; text-decoration: none; margin: 0 15px; font-weight: bold;">أفلام 2025</a>
+    </div>
+
+    <div class="copyright" style="font-size: 14px; margin-top: 20px;">
+        <p>© 2026 داخلين سينما. جميع الحقوق محفوظة.</p>
+        <p>تم التطوير بواسطة: <b style="color: white;">Fouad Abbas</b></p>
+    </div>
+</footer>
+
+<!-- سيبته زي ما هو مشلتهوش -->
+<div class="series-slider">
+  {% for series in series_list %}
+    <div class="series-card">
+      <img src="{{ series.poster }}" alt="{{ series.title }}">
+      <h4>{{ series.title }}</h4>
+    </div>
+  {% endfor %}
+</div>
