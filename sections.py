@@ -315,19 +315,19 @@ def get_cards(items, media_type, title, scroll=True):
     cards_html = "".join([get_card(item) for item in items])
     
     more_link = "#"
-if title == "⭐ الاعلى تقييماً": 
-    more_link = "/top_rated"  # بدل /genre/0?sort=vote_average.desc        more_link = "/genre/0?sort=vote_average.desc"
+    if title == "⭐ الاعلى تقييماً": 
+        more_link = "/genre/0?sort=vote_average.desc"
     elif title == "🎬 قريبا في السينما": 
         more_link = "/upcoming"
     elif title == "⚽ انمي كورة": 
         more_link = "/discover/tv?with_genres=16&with_keywords=football"
     elif title == "🔥 الاكثر رواجاً":
-        more_link = "/trending"  # صلحتها كانت /
+        more_link = "/"
     
     return Markup(f"""
     <div class="section">
         <h2>{title} <a href="{more_link}" style="font-size:14px; color:#E50914; float:left;">عرض الكل ›</a></h2>
-        <div class="row-container">  <!-- ده مهم -->
+        <div class="row-container">
             <button class="scroll-btn left">‹</button>
             <div class="cards-container {container_class}">
                 {cards_html}
@@ -336,6 +336,7 @@ if title == "⭐ الاعلى تقييماً":
         </div>
     </div>
     """)
+
 def get_player(servers_html):
     return Markup(f'''
     <div class="section">
@@ -343,49 +344,46 @@ def get_player(servers_html):
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
             {servers_html}
         </div>
-        <div class="player" style="aspect-ratio: 16/9; margin-top:20px;">
-            <iframe id="player-frame" src="" frameborder="0" allowfullscreen style="width:100%; height:100%; border-radius:8px; background:#000;"></iframe>
+        <div class="player">
+            <iframe id="player-frame" src="" frameborder="0" allowfullscreen style="width:100%; height:500px; border-radius:8px; background:#000;"></iframe>
         </div>
     </div>
     <script>
     function loadServer(url, btn){{
         document.getElementById('player-frame').src = url;
-        document.querySelectorAll('.server-btn').forEach(b=>b.style.background = '#333');
+        document.querySelectorAll('.server-btn').forEach(b=>b.classList.remove('active'));
+        btn.parentElement.classList.add('active');
         btn.style.background = '#E50914';
-        document.getElementById('player-frame').scrollIntoView({{behavior: "smooth"}});
     }}
-    document.addEventListener('DOMContentLoaded', () => {{
-        let firstBtn = document.querySelector('.server-btn');
+    window.onload = () => {{
+        let firstBtn = document.querySelector('.server-btn button');
         if(firstBtn) firstBtn.click();
-    }});
+    }}
     </script>
+    <style>
+    .server-btn.active button{{ background:#E50914 !important; }}
+    </style>
     ''')
-    
+
 def get_servers_html(servers):
-    buttons = ''
-    for name, s in servers:
-        buttons += f'<button class="btn server-btn" type="button" onclick="loadServer(\'{s}\', this)">{name}</button>'
-    return Markup(buttons)
+    return ''.join([f'<button class="btn" onclick="window.location.href=\'{s}\'">{name}</button>' for name, s in servers])
 
 def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
         return [
-            ('▶️ سيرفر 1 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
-            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 3 - MoviesAPI', f'https://moviesapi.club/movie/{id}&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 4 - VidCloud', f'https://vidcloud.icu/embed/movie/{id}'),  # جديد 1
-            ('▶️ سيرفر 5 - Smashy', f'https://smashy.stream/embed/movie/{id}'),    # جديد 2
+            ('▶️ تشغيل 1 - VidSrc', f'https://vidsrc.to/embed/movie/{id}'),
+            ('▶️ تشغيل 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
+            ('▶️ تشغيل 3 - MoviesAPI', f'https://moviesapi.club/movie/{id}&lang=ar&sublang=ar'),
             ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/movie/{id}')
         ]
     else:
         return [
-            ('▶️ سيرفر 1 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
-            ('▶️ سيرفر 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 3 - MoviesAPI', f'https://moviesapi.club/serie/{id}/{season}/{episode}&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 4 - VidCloud', f'https://vidcloud.icu/embed/tv/{id}/{season}/{episode}'),  # جديد 1
-            ('▶️ سيرفر 5 - Smashy', f'https://smashy.stream/embed/tv/{id}/{season}/{episode}'),    # جديد 2
+            ('▶️ تشغيل 1 - VidSrc', f'https://vidsrc.to/embed/tv/{id}/{season}/{episode}'),
+            ('▶️ تشغيل 2 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
+            ('▶️ تشغيل 3 - MoviesAPI', f'https://moviesapi.club/serie/{id}/{season}/{episode}&lang=ar&sublang=ar'),
             ('⬇️ معلومات التحميل', f'https://www.themoviedb.org/tv/{id}')
         ]
+
 def get_cast(cast):
     if not cast: return Markup('')
     actors = ''.join([f'<a href="/search?q={c["name"]}" class="cast-card"><img src="{tmdb.IMG_BASE}w185{c["profile_path"]}"><h3>{c["name"]}</h3></a>' for c in cast[:15] if c.get('profile_path')])
