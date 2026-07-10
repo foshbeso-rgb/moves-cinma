@@ -425,33 +425,19 @@ def get_servers_html(servers, id, media_type, season=1, episode=1):
 def get_servers(id, media_type, season=1, episode=1):
     if media_type == 'movie':
         return [
-            # الاسرع والاثبت
-            ('▶️ سيرفر 1 - VidSrc.xyz', f'https://vidsrc.xyz/embed/movie/{id}'),
-            ('▶️ سيرفر 2 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/movie/{id}/ar'),
-            ('▶️ سيرفر 3 - VidLink', f'https://vidlink.pro/movie/{id}'),
-            
-            # سيرفرات اضافية
-            ('▶️ سيرفر 4 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 5 - MultiEmbed جديد', f'https://multiembed.mov/directstream.php?video_id={id}&tmdb=1'),
-            ('▶️ سيرفر 6 - AutoEmbed', f'https://autoembed.co/movie/tmdb/{id}'),
-            ('▶️ سيرفر 7 - MoviesAPI', f'https://moviesapi.club/movie/{id}'),
-            ('▶️ سيرفر 8 - 2Embed', f'https://www.2embed.cc/embed/movie/{id}'),
-            ('▶️ سيرفر 9 - Smashy', f'https://smashy.stream/m/{id}'),
+            ('▶️ سيرفر 1 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 2 - MultiEmbed', f'https://multiembed.mov/directstream.php?video_id={id}&tmdb=1'),
+            ('▶️ سيرفر 3 - AutoEmbed', f'https://autoembed.co/movie/tmdb/{id}'),
+            ('▶️ سيرفر 4 - MoviesAPI', f'https://moviesapi.club/movie/{id}'),
+            ('▶️ سيرفر 5 - Embed.su', f'https://embed.su/embed/movie/{id}'), # ده بديل قوي
         ]
-    else: # tv
+    else:
         return [
-            # الاسرع والاثبت
-            ('▶️ سيرفر 1 - VidSrc.xyz', f'https://vidsrc.xyz/embed/tv/{id}/{season}-{episode}'),
-            ('▶️ سيرفر 2 - Vidsrc.su مترجم', f'https://vidsrc.su/embed/tv/{id}/{season}/{episode}/ar'),
-            ('▶️ سيرفر 3 - VidLink', f'https://vidlink.pro/tv/{id}/{season}/{episode}'),
-            
-            # سيرفرات اضافية
-            ('▶️ سيرفر 4 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
-            ('▶️ سيرفر 5 - MultiEmbed جديد', f'https://multiembed.mov/directstream.php?video_id={id}&s={season}&e={episode}&tmdb=1'),
-            ('▶️ سيرفر 6 - AutoEmbed', f'https://autoembed.co/tv/tmdb/{id}/{season}/{episode}'),
-            ('▶️ سيرفر 7 - MoviesAPI', f'https://moviesapi.club/tv/{id}-{season}-{episode}'),
-            ('▶️ سيرفر 8 - 2Embed', f'https://www.2embed.cc/embedtv/{id}?s={season}&e={episode}'),
-            ('▶️ سيرفر 9 - Smashy', f'https://smashy.stream/s/{id}/{season}/{episode}'),
+            ('▶️ سيرفر 1 - SuperEmbed', f'https://multiembed.mov/?video_id={id}&tmdb=1&s={season}&e={episode}&lang=ar&sublang=ar'),
+            ('▶️ سيرفر 2 - MultiEmbed', f'https://multiembed.mov/directstream.php?video_id={id}&s={season}&e={episode}&tmdb=1'),
+            ('▶️ سيرفر 3 - AutoEmbed', f'https://autoembed.co/tv/tmdb/{id}/{season}/{episode}'),
+            ('▶️ سيرفر 4 - MoviesAPI', f'https://moviesapi.club/tv/{id}-{season}-{episode}'),
+            ('▶️ سيرفر 5 - Embed.su', f'https://embed.su/embed/tv/{id}/{season}/{episode}'),
         ]
 
         
