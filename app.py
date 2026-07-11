@@ -87,21 +87,58 @@ def index():
 
 @app.route('/about')
 def about():
-    content = Markup(f"""<div class="container mt-4"><h1>من نحن</h1><p>مرحبا بكم في موقعنا</p></div>""")
-    visitors = count_visitors()
-    return s.base(content, "من نحن", visitors=visitors)
+    content = Markup(f"""
+    <div style="min-height:80vh; padding:80px 20px; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=2070') center/cover no-repeat fixed; color:#ddd;">
+        <div style="max-width:900px; margin:auto; text-align:right; line-height:1.9; background:rgba(10,10,10,0.92); backdrop-filter: blur(3px); padding:40px; border-radius:12px; font-weight:500;">
+            <h1 style="color:#e50914; margin-bottom:30px; font-size:32px; text-align:center;">من نحن</h1>
+            <p>
+                {config.SITE_NAME} هو موقع عربي متخصص في عرض الافلام والمسلسلات اونلاين بجودة عالية.
+                هدفنا توفير افضل تجربة مشاهدة للجميع مجاناً.
+                نحن لا نستضيف اي ملفات على سيرفراتنا وجميع الروابط من مصادر خارجية.
+            </p>
+        </div>
+    </div>
+    """)
+    return s.base(content, "من نحن")
 
 @app.route('/contact')
 def contact():
-    content = Markup(f"""<div class="container mt-4"><h1>اتصل بنا</h1><p>للتواصل معنا</p></div>""")
-    visitors = count_visitors()
-    return s.base(content, "اتصل بنا", visitors=visitors)
+    content = Markup(f"""
+    <div style="min-height:80vh; padding:80px 20px; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=2070') center/cover no-repeat fixed; color:#ddd;">
+        <div style="max-width:700px; margin:auto; text-align:right; line-height:1.9; background:rgba(10,10,10,0.92); backdrop-filter: blur(3px); padding:40px; border-radius:12px; font-weight:500;">
+            <h1 style="color:#e50914; margin-bottom:30px; font-size:32px; text-align:center;">اتصل بنا</h1>
+            <p style="font-size:18px; margin-bottom:20px;">لو عندك اقتراح او فيلم/مسلسل ناقص او واجهتك اي مشكلة في الموقع تقدر تتواصل معانا</p>
+            <h2 style="color:#e50914; margin-top:30px; font-size:22px;">الايميل</h2>
+            <p>foshbeso@gmail.com</p>
+            <h2 style="color:#e50914; margin-top:20px; font-size:22px;">صفحاتنا</h2>
+            <p>تابعنا على فيسبوك وتليجرام عشان يوصلك كل جديد</p>
+        </div>
+    </div>
+    """)
+    return s.base(content, "اتصل بنا")
 
 @app.route('/privacy')
 def privacy():
-    content = Markup(f"""<div class="container mt-4"><h1>سياسة الخصوصية</h1><p>نحترم خصوصيتك</p></div>""")
-    visitors = count_visitors()
-    return s.base(content, "سياسة الخصوصية", visitors=visitors)
+    content = Markup(f"""
+    <div style="min-height:80vh; padding:80px 20px; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=2070') center/cover no-repeat fixed; color:#ddd;">
+        <div style="max-width:900px; margin:auto; text-align:right; line-height:1.9; background:rgba(10,10,10,0.92); backdrop-filter: blur(3px); padding:40px; border-radius:12px; font-weight:500;">
+            <h1 style="color:#e50914; margin-bottom:30px; font-size:32px; text-align:center;">سياسة الخصوصية</h1>
+            <p>نحن في <b style="color:#fff;">داخلين سينما</b> نحترم خصوصيتك.</p>
+            <h2 style="color:#e50914; margin-top:30px; font-size:22px;">ملفات الكوكيز</h2>
+            <p>نستخدم الكوكيز لتحسين تجربتك في الموقع. يمكنك تعطيلها من المتصفح.</p>
+            <h2 style="color:#e50914; margin-top:20px; font-size:22px;">اعلانات جوجل</h2>
+            <p>يستخدم موقعنا اعلانات جوجل ادسنس. جوجل قد تستخدم ملفات تعريف الارتباط لعرض اعلانات مناسبة لك.</p>
+            <h2 style="color:#e50914; margin-top:20px; font-size:22px;">الروابط الخارجية</h2>
+            <p>نحن غير مسؤولين عن محتوى المواقع الخارجية التي يتم التحويل اليها.</p>
+
+            <h2 style="color:#e50914; margin-top:20px; font-size:22px;">للتواصل</h2>
+            <p>لو عندك اي استفسار بخصوص سياسة الخصوصية تقدر تتواصل معانا على:
+            <a href="mailto:foshbeso@gmail.com" style="color:#e50914; text-decoration:none;">foshbeso@gmail.com</a></p>
+        </div>
+    </div>
+    """)
+
+    return s.base(content, "سياسة الخصوصية")
 
 @app.route('/trending')
 def trending_page():
